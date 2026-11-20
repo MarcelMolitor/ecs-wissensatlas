@@ -1,0 +1,4 @@
+tests/page.html
+tests/lauf.log
+tests/__pycache__/
+*.pyc
