@@ -35,7 +35,19 @@ async def main():
             probleme.append('Knopf nicht gefunden: %d' % await kn.count())
         else:
             await kn.click()
-            await pg.wait_for_timeout(900)
+            # Auf Stillstand warten statt auf eine feste Dauer (20.11.2026,
+            # Chromium 1194 -> 1243: weiches Scrollen braucht rund 1,2 s).
+            # Dieser Test fiel bei meiner ersten Suche durch, weil ich nach
+            # dem Klickziel gesucht hatte (qchip, data-jump, xlink) statt
+            # nach dem Pruefmuster. Er klickt einen Statusleisten-Knopf.
+            # Richtig ist die Suche nach der Schwellenpruefung auf eine Lage.
+            _v = None
+            for _ in range(40):
+                await pg.wait_for_timeout(150)
+                _j = await pg.evaluate('Math.round(window.scrollY)')
+                if _j == _v:
+                    break
+                _v = _j
             akt = await pg.evaluate("""() => {
                 const c = document.getElementById('b-quellen');
                 if (!c) return 'KARTE FEHLT';
