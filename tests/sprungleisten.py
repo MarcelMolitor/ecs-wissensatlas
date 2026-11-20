@@ -89,7 +89,20 @@ async def main():
                         probleme.append('[%s] "%s" -> %s %s' % (reiter, text, ziel, lage))
                         continue
                     await pg.locator('#tabpanel .jumps .qchip').nth(nr).click()
-                    await pg.wait_for_timeout(700)
+                    # Auf Stillstand warten statt auf eine feste Dauer. Am
+                    # 20.11.2026 wechselte Chromium von 1194 auf 1243; das
+                    # weiche Scrollen braucht dort rund 1,2 s statt der hier
+                    # angesetzten 700 ms. Ergebnis waren 15 gemeldete
+                    # Sprungfehler, die keine waren - gemessen mitten in der
+                    # Bewegung. scrollY ist der richtige Wert: gemessener
+                    # Verlauf 0 -> 6831 -> 14371 -> 16500 -> 17527, dann Halt.
+                    _v = None
+                    for _ in range(40):                  # hoechstens 6 s
+                        await pg.wait_for_timeout(150)
+                        _j = await pg.evaluate('Math.round(window.scrollY)')
+                        if _j == _v:
+                            break
+                        _v = _j
                     top = await pg.evaluate("""(id) => {
                         const c = document.getElementById(id);
                         return c ? Math.round(c.getBoundingClientRect().top) : null;

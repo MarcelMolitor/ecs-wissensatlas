@@ -18,6 +18,15 @@ async def main():
             if chips:
                 await pg.click('#tabpanel .jumps .qchip[data-jump="%s"]' % ziel)
                 await pg.wait_for_timeout(700)
+                # Auf Stillstand warten statt auf eine feste Dauer (20.11.2026,
+                # Chromium 1194 -> 1243: weiches Scrollen braucht dort rund 1,2 s).
+                _v = None
+                for _ in range(40):
+                    await pg.wait_for_timeout(150)
+                    _j = await pg.evaluate('Math.round(window.scrollY)')
+                    if _j == _v:
+                        break
+                    _v = _j
                 y = await pg.evaluate("(id) => { const e=document.getElementById(id); return e ? Math.round(e.getBoundingClientRect().top) : null; }", ziel)
                 print('   Sprung zu', ziel, '-> top =', y)
         print('Fehler:', errs)

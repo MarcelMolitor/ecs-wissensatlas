@@ -25,6 +25,15 @@ async def lauf(p,w,pr):
     if await pg.evaluate("()=>document.documentElement.scrollWidth-document.documentElement.clientWidth")>1: pr.append('%d: seitlicher Ueberlauf'%w)
     for tab,name in ZIEL.items():
         await pg.evaluate("()=>window.scrollTo(0,0)"); await pg.locator('.wege .xlink[data-tab="%s"]'%tab).click(); await pg.wait_for_timeout(900)
+        # Auf Stillstand warten statt auf eine feste Dauer (20.11.2026,
+        # Chromium 1194 -> 1243: weiches Scrollen braucht dort rund 1,2 s).
+        _v = None
+        for _ in range(40):
+            await pg.wait_for_timeout(150)
+            _j = await pg.evaluate('Math.round(window.scrollY)')
+            if _j == _v:
+                break
+            _v = _j
         akt=await pg.evaluate("()=>{const b=document.querySelector('#tabs button[aria-selected=\"true\"],#tabs button.on,#tabs button[aria-pressed=\"true\"]');return b?b.textContent.trim():''}")
         if name not in akt: pr.append('%d: Weg %s oeffnet Reiter %r'%(w,tab,akt))
         y=await pg.evaluate("()=>document.getElementById('tabs').getBoundingClientRect().top")

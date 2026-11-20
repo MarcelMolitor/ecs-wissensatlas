@@ -67,6 +67,21 @@ async def main():
         else:
             await chip.click()
             await pg.wait_for_timeout(680)
+            # Auf Stillstand warten statt auf eine feste Dauer. Am 20.11.2026
+            # wurde der Container ersetzt und Chromium sprang von 1194 auf 1243;
+            # derselbe Sprung braucht dort mehr als doppelt so lang. Gemessener
+            # Verlauf der Kartenoberkante: 9522 -> 2333 -> 661 -> 164 -> 137.
+            # Eine feste Wartezeit von 680 ms misst mitten in der Bewegung und
+            # meldet einen Seitenfehler, den es nicht gibt. Sechs Tests hingen
+            # daran. Dieselbe Lehre wie beim fest eingetragenen Chromium-Pfad:
+            # kein Wert, der an eine Umgebung gebunden ist.
+            _vorher = None
+            for _ in range(40):                      # hoechstens 6 Sekunden
+                await pg.wait_for_timeout(150)
+                _jetzt = await pg.evaluate('Math.round(window.scrollY)')
+                if _jetzt == _vorher:
+                    break
+                _vorher = _jetzt
             lage = await pg.evaluate("""() => {
                 const r = document.getElementById('bo-pepcan').getBoundingClientRect();
                 return {top: Math.round(r.top), hoch: Math.round(r.height)};

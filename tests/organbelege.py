@@ -79,7 +79,17 @@ PFLICHT = {
 # fuer die gerenderte Wendung; hier nur die Zahl in der Quelle.
 PFLICHT_STUFE0 = [('mon', 'liver'), ('mon', 'muskel'), ('mon', 'pankreas')]
 # Stand nach der Runde vom 13.11.2026 (vorher 56, 50, 35, 31, 23). Darf sinken, nicht steigen.
-OBERGRENZE_UNBELEGT = 10   # 14.11.: 11 -> 10 (nab/heart belegt); nur senken, nie anheben
+OBERGRENZE_UNBELEGT = 4    # 14.11.: 11 -> 10 (nab/heart belegt)
+#                          # 20.11.: 10 -> 4 (sechs Felder belegt: bcp/bone,
+#                          # cbd/spinal, cbg/gut, inh/gut, mtz/liver, thcv/gut)
+#                          # NUR SENKEN, NIE ANHEBEN. Reisst ein neuer Stoff die
+#                          # Grenze, fehlen Belege - nicht Spielraum.
+#                          # Offen bleiben mit Grund: bcp/skin, cbda/liver,
+#                          # syn/gut, syn/lung. Fuer die synthetischen
+#                          # Cannabinoide fand sich nur ein Einzelfall mit
+#                          # LSD-Komedikation und eine Kohorte von 17 Faellen,
+#                          # die Unruhe und Rhythmusstoerungen berichtet - nicht
+#                          # Uebelkeit - bei einem Intervall von 1,0 bis 108.
 # THC darf KEIN unbelegtes Organfeld mehr haben - der Stoff war der schlechteste
 # der Seite und ist der, den Leser am haeufigsten nachschlagen.
 LUECKENLOS = ['thc']
@@ -177,7 +187,7 @@ def main():
     # ist eine nachpruefbare Quelle, sie hat nur keinen PMID; die Seite nennt
     # NCT-Nummern ohnehin im Lesertext. WICHTIG: Nur die konkrete NUMMER zaehlt,
     # nicht die Floskel "ClinicalTrials.gov" - sonst waere das eine Hintertuer,
-    # mit der sich jede Luecke zuschreiben liesse. Obergrenze bleibt 10.
+    # mit der sich jede Luecke zuschreiben liesse. Obergrenze jetzt 4.
     belegt = lambda t: ('[[' in t) or re.search(r'NCT\d{8}', t)
     ohne = [k for k, v in felder.items() if not belegt(v[0])]
     # Gegenprobe: Die Floskel allein darf ein Feld NICHT belegt machen.
