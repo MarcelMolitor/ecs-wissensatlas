@@ -24,6 +24,10 @@ echo "Pruefling: $PRUEFLING"
 echo "Groesse:   $(wc -c < "$HIER/page.html") Bytes"
 echo
 
+# Konsolenmeldungen, die "hier ist kein Netz" heissen und nicht "die Seite ist
+# kaputt". Die Seite fragt Studienregister live ab; ohne Netz meldet die Konsole.
+NETZ="ERR_TUNNEL_CONNECTION_FAILED|ERR_NAME_NOT_RESOLVED|ERR_INTERNET_DISCONNECTED|ERR_PROXY_CONNECTION_FAILED"
+
 LOG="$HIER/lauf.log"
 : > "$LOG"
 GELAUFEN=0; GRUEN=0
@@ -47,8 +51,21 @@ for T in "$HIER"/*.py; do
   # 4) Die 45 nur berichtenden Tests haben keinen Rueckgabewert. 28 von ihnen
   #    sammeln JavaScript-Fehler der Seite und drucken sie bloss - eine nicht
   #    leere Liste waere sonst durchgelaufen. Diese Pruefung liegt beim Laeufer,
-  #    nicht im Test, und gilt darum fuer alle 106.
-  [ -z "$GRUND" ] && echo "$AUS" | grep -qE 'Fehler[^[]*\[[^]]' && GRUND="JS-Fehler auf der Seite"
+  #    nicht im Test, und gilt darum fuer alle 107.
+  #    Die Tests schreiben die Liste teils deutsch ("Fehler: [...]"), teils
+  #    englisch ("errors=[...]"); beide Formen werden geprueft.
+  #    Ausgenommen sind Netzmeldungen: die Seite versucht Studienregister live
+  #    abzufragen. Ohne Netzanbindung meldet die Konsole das, und das heisst
+  #    "hier ist kein Netz", nicht "die Seite ist kaputt".
+  #    Die Netzmeldungen werden INNERHALB der Liste entfernt, nicht zeilenweise.
+  #    Zeilenweise war der erste Versuch, und er haette eine Liste mit einer
+  #    Netzmeldung UND einem echten Fehler stillschweigend durchgelassen - also
+  #    genau im Normalfall ohne Netzanbindung. Ein falsches Gruen.
+  if [ -z "$GRUND" ]; then
+    REST=$(echo "$AUS" | grep -oE '(Fehler[^[]{0,14}|errors=)\[[^]]+\]' \
+           | sed -E "s/'[^']*($NETZ)[^']*',?[[:space:]]*//g" | grep -E "'")
+    [ -n "$REST" ] && GRUND="JS-Fehler auf der Seite"
+  fi
 
   if [ -n "$GRUND" ]; then
     echo "FEHLER ($GRUND)"

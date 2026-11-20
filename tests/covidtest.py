@@ -5,7 +5,7 @@ _c = _os.environ.get('CHROME_PATH') or '/opt/pw-browsers/chromium-1194/chrome-li
 _CHROME = _c if _os.path.exists(_c) else None  # None => Playwright nimmt sein eigenes Chromium
 import asyncio, re
 from playwright.async_api import async_playwright
-exec(open('run.py').read().split("async def main")[0])  # regenerates page.html
+exec(open(HIER + '/run.py').read().split("async def main")[0])  # regenerates page.html
 async def main():
   async with async_playwright() as p:
     b=await p.chromium.launch(executable_path=_CHROME)
