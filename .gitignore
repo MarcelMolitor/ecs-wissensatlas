@@ -8,3 +8,4 @@ tests/*.png
 
 # Bildschirmfotos, die Tests beim Laufen ablegen
 *.png
+tests/page-run.html

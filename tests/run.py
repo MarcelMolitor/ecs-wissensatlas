@@ -19,7 +19,14 @@ window.claude={use:async(n)=>{
  return null;}};
 </script>"""
 doc='<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"></head><body>'+mock+html+'</body></html>'
-open(HIER + '/page.html','w').write(doc)
+# 21.11.2026: Dieser Test schrieb seine praeparierte Fassung frueher ZURUECK
+# nach page.html - die gemeinsame Pruefkopie aller Tests - und stellte sie nie
+# wieder her. Die 20 Tests, die alphabetisch nach run.py laufen, prueften damit
+# eine Seite in einer zweiten HTML-Huelle und mit einer Attrappe fuer
+# window.claude. Dieselbe Fehlerart wie im November, als 22 Tests die
+# Arbeitsdatei statt der geprueften Fassung lasen. Eigene Datei, und danach weg.
+EIGEN = HIER + '/page-run.html'
+open(EIGEN,'w').write(doc)
 async def main():
   async with async_playwright() as p:
     b=await p.chromium.launch(executable_path=_CHROME)
@@ -28,7 +35,7 @@ async def main():
       pg=await b.new_page(viewport=vp)
       pg.on('pageerror',lambda e:errs.append(str(e)))
       pg.on('console',lambda m:errs.append('console:'+m.text) if m.type=='error' else None)
-      await pg.goto('file://' + HIER + '/page.html'); await pg.wait_for_timeout(800)
+      await pg.goto('file://' + EIGEN); await pg.wait_for_timeout(800)
       # click every substance
       chips=await pg.query_selector_all('.chip')
       for c in chips:
@@ -75,4 +82,5 @@ async def main():
       print(' gene cites:', await pg.locator('#tabpanel sup.cite').count())
     print('ERRORS',errs)
     await b.close()
+    _os.path.exists(EIGEN) and _os.remove(EIGEN)
 asyncio.run(main())
