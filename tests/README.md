@@ -1,7 +1,7 @@
 # Pruefsuite des ECS-Wissensatlas
 
-110 Tests, die `index.html` zusammenhalten. Sie sind der Grund, warum die Seite
-623 Quellen tragen kann, ohne dass sich Angaben widersprechen.
+111 Tests, die `index.html` zusammenhalten. Sie sind der Grund, warum die Seite
+628 Quellen tragen kann, ohne dass sich Angaben widersprechen.
 
 ## Laufen lassen
 
@@ -9,7 +9,7 @@
 bash tests/run-all.sh
 ```
 
-Das kopiert `index.html` nach `tests/page.html` und laeuft alle 110 Tests dagegen.
+Das kopiert `index.html` nach `tests/page.html` und laeuft alle 111 Tests dagegen.
 Rueckgabewert 0 heisst: keiner hat etwas gemeldet. Dauer: etwa 20 bis 30 Minuten.
 
 Eine andere Datei pruefen:
@@ -89,7 +89,7 @@ Laeufer diese Druckform ueberhaupt als Fehler erkennt**.
 
 | | Zahl | heisst |
 |---|---|---|
-| Tests mit Rueckgabewert | 58 | melden selbst, maschinell pruefbar |
+| Tests mit Rueckgabewert | 59 | melden selbst, maschinell pruefbar |
 | nur berichtende Tests | 52 | drucken Befunde, die gelesen werden muessen |
 | davon mit JS-Fehlersammlung | 28 | drucken Seitenfehler, ohne zu scheitern |
 
