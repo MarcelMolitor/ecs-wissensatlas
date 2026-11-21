@@ -27,6 +27,9 @@ SOLL={'prefrontal':('Stirnhirn','hoch',['Assoziationsrinde','am Befinden der Tei
       'thalamus':('Thalamus','mäßig',['Kopplung zwischen Thalamus und Tastrinde','nicht begutachteten Vorabveröffentlichung']),
       'vta':('Tegmentum (VTA)','sehr gering',['Eine eigene Dichtemessung','abgeflachten','heißen nicht wenig Wirkung','ist hier nicht belegt']),
       'brech':('Brechzentrum','hoch',['am Frettchen gezeigt','Area postrema','der Ort nicht','deutlich schlechter vertragen','keinen Messwert am Menschen'])}
+JS_UMRISS = "(keys)=>{const sv=document.getElementById('brainSvg');const cor=document.querySelector('#rg-cortex path.rshape');const pt=sv.createSVGPoint(); const schlecht=[];const rand=(s)=>{const P=[];if(s.tagName==='path'){const L=s.getTotalLength();for(let i=0;i<36;i++)P.push(s.getPointAtLength(L*i/36));}else{const cx=+s.getAttribute('cx'),cy=+s.getAttribute('cy');const rx=+(s.getAttribute('rx')||s.getAttribute('r'));const ry=+(s.getAttribute('ry')||s.getAttribute('r'));const m=(s.getAttribute('transform')||'').match(/rotate\\(([-\\d.]+)/);const w=m?+m[1]*Math.PI/180:0;for(let a=0;a<360;a+=10){const t=a*Math.PI/180;const x0=rx*Math.cos(t),y0=ry*Math.sin(t);P.push({x:cx+x0*Math.cos(w)-y0*Math.sin(w),y:cy+x0*Math.sin(w)+y0*Math.cos(w)});}}return P;};keys.forEach(k=>{const s=document.querySelector('#rg-'+k+' .rshape'); if(!s)return;let aus=0; rand(s).forEach(q=>{pt.x=q.x;pt.y=q.y;if(!cor.isPointInFill(pt))aus++;});if(aus)schlecht.push(k+' ('+aus+' Punkte)');});return schlecht;}"
+
+
 async def main():
     pr=[]
     async with async_playwright() as p:
@@ -67,6 +70,18 @@ async def main():
           const pt=sv.createSVGPoint();let aus=0;for(const k of ['brech','nigra','vta','pag']){const bb=document.querySelector('#rg-'+k+' .rshape').getBBox();
           for(let a=0;a<360;a+=30){pt.x=bb.x+bb.width/2+bb.width/2*Math.cos(a*Math.PI/180)*.98;pt.y=bb.y+bb.height/2+bb.height/2*Math.sin(a*Math.PI/180)*.98;if(!st.isPointInFill(pt))aus++}}return aus}""")
         if drin: pr.append('Brechzentrum/Nigra/Tegmentum/Hoehlengrau: %d Punkte liegen ausserhalb des Hirnstamms'%drin)
+        # 21.11.2026: Behauptet war, das Grosshirn habe keinen Schlaefenlappen und
+        # Hippocampus, Entorhinalrinde und Amygdala haetten keinen richtigen Platz.
+        # Falsch: der Pfad hat eine Ausbuchtung nach unten, und alle drei liegen
+        # vollstaendig drin. Die erste Messung tastete das RECHTECK der Formen ab
+        # statt die Formen selbst - bei gedrehten Ellipsen und bei Pfaden (prefrontal
+        # ist ein Blatt) ist das nicht dasselbe. Hier steht die richtige Messung,
+        # damit die Zeichnung nicht unbemerkt abdriftet.
+        INNEN = ['cingulate', 'prefrontal', 'striatum', 'pallidum', 'accumbens',
+                 'thalamus', 'insula', 'hypothalamus', 'amygdala', 'entorhinal',
+                 'hippocampus']
+        raus = await pg.evaluate(JS_UMRISS, INNEN)
+        if raus: pr.append('ragt aus dem Grosshirn-Umriss: ' + ', '.join(raus))
         print('Probleme:',pr or 'keine'); print('Fehler:',err or 'keine')
         await pg.locator('#brainSvg').screenshot(path=HIER + '/hirn.png')
         await b.close()
