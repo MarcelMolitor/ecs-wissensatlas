@@ -6,7 +6,7 @@ import os as _os
 HIER = _os.path.dirname(_os.path.abspath(__file__))
 _c = _os.environ.get('CHROME_PATH') or '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
 _CHROME = _c if _os.path.exists(_c) else None  # None => Playwright nimmt sein eigenes Chromium
-import asyncio
+import asyncio, re
 from playwright.async_api import async_playwright
 
 async def zeile(pg):
@@ -55,7 +55,13 @@ async def main():
                 fehlt.append(name + ': ZEILE FEHLT'); print(name.ljust(28), 'ZEILE FEHLT'); continue
             tote = [s for s in z['subs'] if s not in ids]
             if tote: fehlt.append('%s: tote Stoff-ids %s' % (name, tote))
-            if not z['subs'] and 'Keinen' not in z['txt'] and 'kein eigenes Profil' not in z['txt']:
+            # 21.11.2026: Die Pruefung verlangte woertlich "kein eigenes Profil".
+            # Die Seite schreibt beim Doppelhemmer "deshalb hat er hier auch kein
+            # Profil" - dieselbe Aussage, ein Wort kuerzer. Der Test meldete das
+            # seit dem Umschreiben zweimal, gab aber 0 zurueck, und run-all.sh sah
+            # es nicht. Beides ist jetzt behoben: hier der Wortlaut, dort der Laeufer.
+            if not z['subs'] and 'Keinen' not in z['txt'] \
+                    and not re.search(r'kein (eigenes )?Profil', z['txt']):
                 fehlt.append('%s: kein Link und keine ausdrueckliche Absage' % name)
             print(name.ljust(28), (z['subs'] or z['tabs'] or ['-']), '|', z['txt'][:78])
         print('\nFaelle:', len(faelle), '| Probleme:', fehlt or 'keine', '| Konsole:', errs or 'keine')

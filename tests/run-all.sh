@@ -67,6 +67,18 @@ for T in "$HIER"/*.py; do
     [ -n "$REST" ] && GRUND="JS-Fehler auf der Seite"
   fi
 
+  # 5) Dasselbe fuer die Problemlisten. Am 21.11.2026 meldete verwandt.py zwei
+  #    Probleme, gab 0 zurueck und wurde als "ok" gezaehlt: Die Zeile lautet
+  #    "Faelle: 12 | Probleme: [...] | Konsole: keine" und beginnt weder mit
+  #    FEHLER noch mit FEHLT, also griff Regel 3 nicht. Ein Test, der sagt, dass
+  #    etwas nicht stimmt, darf nicht gruen zaehlen - egal wie er es sagt.
+  #    Eine leere Liste druckt "Probleme: keine" und wird hier nicht getroffen.
+  if [ -z "$GRUND" ]; then
+    PROB=$(echo "$AUS" | grep -oE 'Probleme: \[[^]]+\]' \
+           | sed -E "s/'[^']*($NETZ)[^']*',?[[:space:]]*//g" | grep -E "'")
+    [ -n "$PROB" ] && GRUND="gemeldete Probleme"
+  fi
+
   if [ -n "$GRUND" ]; then
     echo "FEHLER ($GRUND)"
     FEHLER+=("$NAME: $GRUND")
