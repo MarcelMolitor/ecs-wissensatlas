@@ -16,7 +16,14 @@ SOLL={'prefrontal':('Stirnhirn','hoch',['Assoziationsrinde','am Befinden der Tei
       'cingulate':('Gyrus cinguli','hoch',['nicht aber, wie stark','41 Prozent höher','kein gesicherter Wert','Eine eigene Dichtezahl']),
       'insula':('Inselrinde','hoch',['als Folge, nicht als Angriffsort','nichts Schmerzspezifisches','ohne dass die Leistung litt','nur ungefähr eingetragen']),
       'olf':('Riechkolben','hoch',['Bei hungrigen Mäusen','Am Menschen ist das Gegenteil gemessen','gemessen ist sie nicht','stammt hier nicht vom Menschen']),
-      'hypothalamus':('Hypothalamus','mäßig',['fast alles aus dem Tierversuch','die sonst Sättigung melden','das Ergebnis gemessen, nicht der Ort','an welcher Stelle im Körper']),
+      # 21.11.2026: Die Tafel handelte nur von Hunger, Durst und Gewicht und nannte
+      # Stress, CRH und Cortisol mit keinem Wort - obwohl ihre Aufgabenzeile
+      # "Hormonsteuerung" sagt und der Reiter nachbarn einen eigenen Abschnitt
+      # "Die Stressachse" hat, der genau hier spielt. Dieselbe Fehlerart wie bei
+      # der Amygdala und CRH. Die drei neuen Saetze halten die Gegenrichtung fest:
+      # in der Amygdala baut CRH die Bremse AB, hier schaltet das Stresshormon sie EIN.
+      'hypothalamus':('Hypothalamus','mäßig',['fast alles aus dem Tierversuch','die sonst Sättigung melden','das Ergebnis gemessen, nicht der Ort','an welcher Stelle im Körper',
+        'Nucleus paraventricularis','die CRH herstellen','zwei entgegengesetzte Richtungen']),
       'thalamus':('Thalamus','mäßig',['Kopplung zwischen Thalamus und Tastrinde','nicht begutachteten Vorabveröffentlichung']),
       'vta':('Tegmentum (VTA)','sehr gering',['Eine eigene Dichtemessung','abgeflachten','heißen nicht wenig Wirkung','ist hier nicht belegt']),
       'brech':('Brechzentrum','hoch',['am Frettchen gezeigt','Area postrema','der Ort nicht','deutlich schlechter vertragen','keinen Messwert am Menschen'])}
