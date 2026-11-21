@@ -57,9 +57,9 @@ async def main():
                 if d in t: pr.append(k+': Dosisangabe')
             if await pg.locator('#organInfo sup, #organInfo .ref').count()<(2 if k=='vta' else 3): pr.append(k+': weniger als 3 Belegmarken')
         drin=await pg.evaluate("""()=>{const sv=document.getElementById('brainSvg');const st=document.querySelector('#rg-brainstem .rshape');
-          const pt=sv.createSVGPoint();let aus=0;for(const k of ['brech','nigra','vta']){const bb=document.querySelector('#rg-'+k+' .rshape').getBBox();
+          const pt=sv.createSVGPoint();let aus=0;for(const k of ['brech','nigra','vta','pag']){const bb=document.querySelector('#rg-'+k+' .rshape').getBBox();
           for(let a=0;a<360;a+=30){pt.x=bb.x+bb.width/2+bb.width/2*Math.cos(a*Math.PI/180)*.98;pt.y=bb.y+bb.height/2+bb.height/2*Math.sin(a*Math.PI/180)*.98;if(!st.isPointInFill(pt))aus++}}return aus}""")
-        if drin: pr.append('Brechzentrum/Nigra/Tegmentum: %d Punkte liegen ausserhalb des Hirnstamms'%drin)
+        if drin: pr.append('Brechzentrum/Nigra/Tegmentum/Hoehlengrau: %d Punkte liegen ausserhalb des Hirnstamms'%drin)
         print('Probleme:',pr or 'keine'); print('Fehler:',err or 'keine')
         await pg.locator('#brainSvg').screenshot(path=HIER + '/hirn.png')
         await b.close()

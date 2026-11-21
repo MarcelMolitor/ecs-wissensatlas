@@ -38,8 +38,13 @@ QUELLE = HIER + '/page.html'   # 15.11.: war die Arbeitsdatei, nicht der Pruefli
 # als hoch oder sehr hoch besetzt; faellt eine heraus, fehlt wieder ein Hirnteil.
 PFLICHT = ['Großhirnrinde', 'Gyrus cinguli', 'Stirnhirn', 'Basalganglien', 'Globus pallidus',
            'Nucleus accumbens', 'Thalamus', 'Inselrinde', 'Hypothalamus', 'Amygdala',
-           'Riechkolben', 'Entorhinalrinde', 'Hippocampus', 'Kleinhirn', 'Substantia nigra',
-           'Tegmentum (VTA)', 'Höhlengrau',
+           'Riechkolben', 'Entorhinalrinde', 'Hippocampus', 'Kleinhirn', 'Höhlengrau',
+           'Tegmentum (VTA)', 'Substantia nigra',
+           # 21.11.2026: Das Mittelhirn war verkehrt herum eingetragen - die
+           # Substantia nigra oben, das Hoehlengrau unten in der Bruecke.
+           # Richtig ist dorsoventral: Hoehlengrau, Tegmentum, Substantia nigra.
+           # Mit den Formen wandert ly mit, sonst kreuzten sich die drei
+           # Beschriftungslinien. Darum steht hier jetzt die neue Folge.
            'Brechzentrum', 'Hirnstamm']
 # Von oben nach unten GELESEN, nicht in der Reihenfolge des Quelltexts: Das
 # Hoehlengrau steht im BRAIN-Objekt bewusst zuletzt, weil die Regionen in

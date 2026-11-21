@@ -12,7 +12,11 @@ import asyncio, sys
 from playwright.async_api import async_playwright
 EXE = _CHROME
 SEITE=sys.argv[1] if len(sys.argv)>1 else 'file://' + HIER + '/page.html'
-KLEIN={'pallidum':(164,130),'nigra':(211,203),'vta':(224,207),'pag':(217,222),'brech':(224,256)}
+# 21.11.2026: Mittelhirn anatomisch neu geordnet (Hoehlengrau dorsal, darunter
+# Tegmentum, ganz unten vorn die Substantia nigra). Die Trefferkreise wurden
+# dabei von 6/6/8 auf 5 verkleinert, weil die drei jetzt nur 10 Einheiten
+# auseinanderliegen und sich sonst gegenseitig schlucken wuerden.
+KLEIN={'pallidum':(164,130),'nigra':(210,215),'vta':(217,209),'pag':(224,203),'brech':(224,256)}
 async def lauf(p, breite, pr):
     b=await p.chromium.launch(executable_path=EXE,args=['--no-sandbox'])
     ctx=await b.new_context(viewport={'width':breite,'height':900},has_touch=breite<700)

@@ -10,7 +10,11 @@ import asyncio, sys
 from playwright.async_api import async_playwright
 EXE = _CHROME
 SEITE=sys.argv[1] if len(sys.argv)>1 else 'file://' + HIER + '/page.html'
-MUSS=['Mäuse ohne CB1','verlernten Angst leichter','rund 10 Prozent niedriger','ohne Zusammenhang mit den Beschwerden','nicht stärker als die Vergleichsbehandlung','an Mäusen gezeigt']
+# 21.11.2026: Die Tafel nannte CRH mit keinem Wort, obwohl der Weg
+# CRH -> CRHR1 -> FAAH genau hier gemessen wurde und seit dem 20.11. in drei
+# anderen Reitern steht. Genau die Luecke, die dieser Test haette finden sollen.
+MUSS=['Mäuse ohne CB1','verlernten Angst leichter','rund 10 Prozent niedriger','ohne Zusammenhang mit den Beschwerden','nicht stärker als die Vergleichsbehandlung','an Mäusen gezeigt',
+      'CRHR1','Ratten und Mäusen','nicht glatt']
 async def main():
     pr=[]
     async with async_playwright() as p:
