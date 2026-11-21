@@ -1,7 +1,7 @@
 # Pruefsuite des ECS-Wissensatlas
 
-107 Tests, die `index.html` zusammenhalten. Sie sind der Grund, warum die Seite
-601 Quellen tragen kann, ohne dass sich Angaben widersprechen.
+109 Tests, die `index.html` zusammenhalten. Sie sind der Grund, warum die Seite
+621 Quellen tragen kann, ohne dass sich Angaben widersprechen.
 
 ## Laufen lassen
 
@@ -9,7 +9,7 @@
 bash tests/run-all.sh
 ```
 
-Das kopiert `index.html` nach `tests/page.html` und laeuft alle 106 Tests dagegen.
+Das kopiert `index.html` nach `tests/page.html` und laeuft alle 109 Tests dagegen.
 Rueckgabewert 0 heisst: keiner hat etwas gemeldet. Dauer: etwa 20 bis 30 Minuten.
 
 Eine andere Datei pruefen:
@@ -27,7 +27,7 @@ python3 tests/wirkstufe.py
 
 ### Chromium
 
-94 der Tests steuern einen Browser. Sie nehmen in dieser Reihenfolge:
+88 der Tests steuern einen Browser. Sie nehmen in dieser Reihenfolge:
 
 1. `$CHROME_PATH`, wenn gesetzt
 2. den Pfad der Bauumgebung, wenn er existiert
@@ -89,11 +89,17 @@ Laeufer diese Druckform ueberhaupt als Fehler erkennt**.
 
 | | Zahl | heisst |
 |---|---|---|
-| Tests mit Rueckgabewert | 61 | melden selbst, maschinell pruefbar |
-| nur berichtende Tests | 45 | drucken Befunde, die gelesen werden muessen |
+| Tests mit Rueckgabewert | 57 | melden selbst, maschinell pruefbar |
+| nur berichtende Tests | 52 | drucken Befunde, die gelesen werden muessen |
 | davon mit JS-Fehlersammlung | 28 | drucken Seitenfehler, ohne zu scheitern |
 
-Die 45 berichtenden Tests sind **keine** Durchfallpruefungen. Sie drucken Zahlen
+Gezaehlt am 21.11.2026 so, und damit nachrechenbar: `ls tests/*.py | wc -l` fuer
+die Gesamtzahl, `grep -l 'sys.exit(1)' tests/*.py | wc -l` fuer die mit
+Rueckgabewert, `grep -L async_playwright tests/*.py` fuer die ohne Browser. Die
+Zahlen standen vorher auf 107/106/94 und 61/45 - drei verschiedene Gesamtzahlen
+in einer Datei. Wer eine davon aendert, rechnet die anderen mit nach.
+
+Die 52 berichtenden Tests sind **keine** Durchfallpruefungen. Sie drucken Zahlen
 und Textstellen, die ein Mensch oder ein Agent beurteilen muss. `run-all.sh`
 schliesst eine Luecke davon selbst: es nennt jeden Test rot, dessen Ausgabe eine
 nicht leere JavaScript-Fehlerliste enthaelt. Diese Pruefung liegt im Laeufer, nicht
