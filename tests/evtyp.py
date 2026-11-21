@@ -16,6 +16,23 @@ KEY = {}
 for m in re.finditer(r"\[\s*'(\d+)'\s*,\s*(\d{4})\s*,(?:\s*'(?:[^'\\]|\\.)*'\s*,){4}\s*'((?:[^'\\]|\\.)*)'", s[i:j]):
     KEY[m.group(1)] = m.group(3)
 NUR_LABOR = {'Tierstudie', 'Zellversuch', 'Grundlagen', 'Modellrechnung'}
+
+# 21.11.2026: Beim Nachzaehlen der Quellen fuer das README fiel auf, dass es 624
+# KEY-Eintraege, aber nur 623 verschiedene PMIDs gab: Agarwal u. a. 2007
+# (17558404) stand zweimal, mit zwei Kernaussagen und demselben DOI. Die
+# Zuordnung KEY oben ist ein Woerterbuch und verliert solche Doppel still - der
+# zweite Eintrag ueberschreibt den ersten, und niemand merkt es. Gezaehlt wird
+# darum auf der Liste, nicht im Woerterbuch.
+# Warum das zaehlt: cite() schlaegt die Nummer in einer Zuordnung PMID->Nummer
+# nach, die Quellenliste berechnet sie mit findIndex. Bei einem Doppel laufen
+# die beiden auseinander, und dieselbe Arbeit belegt zwei Nummern.
+from collections import Counter as _C
+_alle = [_m.group(1) for _m in re.finditer(r"\['(\d{6,8})',\d{4},", s[i:j])]
+_dop = sorted(p for p, n in _C(_alle).items() if n > 1)
+if _dop:
+    print('FEHLER: PMID doppelt im Quellenverzeichnis:', _dop)
+print('KEY-Eintraege:', len(_alle), '| verschiedene PMIDs:', len(set(_alle)))
+
 t1 = t2 = 0
 for m in re.finditer(r"\{id:'([a-z0-9]+)',group:'([^']+)',name:'([^']+)'", s):
     nxt = s.find("\n {id:'", m.start())
