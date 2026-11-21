@@ -52,7 +52,14 @@ QUELLE = HIER + '/page.html'   # 15.11.: war die Arbeitsdatei, nicht der Pruefli
 
 # Die Zahlwoerter im Text und die Zeilen, die sie behaupten. An diesem Tag sind
 # vier handgezaehlte Zahlen falsch gewesen - deshalb wird hier nachgezaehlt.
-SOLL = {'e-gemessen': (5, 'Fünf Dinge'), 'e-verkauft': (7, 'Sieben Produkte')}
+# 21.11.2026: e-gemessen hat eine sechste Zeile bekommen (Nahrungs-N-Acyl-
+# ethanolamine, PMID 42171141). Dieser Test hielt die alte Zahl fest und wurde
+# dadurch rot - zu Recht: Eine Tabellenzeile hinzuzufuegen SOLL eine bewusste
+# Aenderung sein, die man hier bestaetigt. Das allgemeine Gegenstueck steht in
+# zaehlsaetze.py: der liest das Zahlwort aus der Seite und prueft es gegen die
+# Zeilen, kennt also keine Zahl, die veralten kann. Beide zusammen: dieser Test
+# pinnt die Groesse, der andere die Uebereinstimmung.
+SOLL = {'e-gemessen': (6, 'Sechs Dinge'), 'e-verkauft': (7, 'Sieben Produkte')}
 MUSS = [
     'Omega-3-Abkömmlinge +65 % und +99 %',
     'keine gezeigte Ursache',          # die Korrelations-Einschraenkung

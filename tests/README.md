@@ -1,7 +1,7 @@
 # Pruefsuite des ECS-Wissensatlas
 
 111 Tests, die `index.html` zusammenhalten. Sie sind der Grund, warum die Seite
-628 Quellen tragen kann, ohne dass sich Angaben widersprechen.
+631 Quellen tragen kann, ohne dass sich Angaben widersprechen.
 
 ## Laufen lassen
 

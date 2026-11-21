@@ -57,6 +57,24 @@ async def main():
         if 'seit über fünfzehn Jahren offen' in t:
             probleme.append('zurueckgezogene Behauptung ueber die Literatur wieder da')
 
+        # --- 2b. Karte e-dagla (21.11.2026, Marcels Fund)
+        # Anti-DAGLA: eine Erkrankung, die das 2-AG-bildende Enzym SELBST angreift.
+        # Die Karte traegt starke Aussagen (Kleinhirnschwinden binnen sechs Monaten,
+        # Besserung nach einer einzigen Zellgabe) und genau deshalb drei Vorbehalte,
+        # die in der Arbeit selbst stehen. Faellt einer davon heraus, bleibt eine
+        # Werbekarte uebrig - darum werden sie hier gepinnt.
+        d = await pg.inner_text('#e-dagla')
+        print('  e-dagla:', len(d), 'Zeichen')
+        for muss in ['Molekularschicht', 'drei von vier',
+                     '17 von 101', '1 von 102',          # der Antikoerper allein genuegt nicht
+                     'Ein Fall ist ein Fall',            # die Zellgabe ist ein Einzelfall
+                     'noch gestritten wird']:             # der Streit um die ersten Faelle
+            if muss not in d:
+                probleme.append('e-dagla, fehlt: %s' % muss)
+        for weg in ['beweist', 'heilt', 'wirksame Behandlung']:
+            if weg in d:
+                probleme.append('e-dagla, Ueberbehauptung: %s' % weg)
+
         # --- 3. Karte bo-vesikel
         await reiter(pg, 'Botenstoffe')
         chip = pg.locator('.qchip[data-jump="bo-vesikel"]')
