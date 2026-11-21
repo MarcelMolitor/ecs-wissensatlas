@@ -56,6 +56,35 @@ Darum gilt: wer einen Test anfasst, prueft nach, **gegen welche Datei er laeuft*
 und ob er einen echten Fehler noch findet. Ein Test, der nie rot war, ist nicht
 bewiesen.
 
+### Und niemand schreibt in die Pruefkopie
+
+Am 21.11.2026 kam derselbe Fehler aus der anderen Richtung zurueck. `run.py`
+packt die Seite zum Pruefen in eine zweite HTML-Huelle und schiebt ihr eine
+Attrappe fuer `window.claude` unter, damit die Registerabfragen gefaelscht
+antworten. Dieses Ergebnis schrieb es nach `tests/page.html` zurueck und stellte
+die Datei nie wieder her. Die 20 Tests, die alphabetisch nach `run.py` laufen,
+prueften damit nicht die Seite, sondern die praeparierte Fassung - darunter die
+Sprung- und Scrollpruefungen, also genau die, die eine zusaetzliche
+Dokumenthuelle stoeren kann. Aufgefallen ist es nur, weil `page.html` nach einem
+Lauf 7160 Byte groesser war als der Pruefling.
+
+Wer einen Test braucht, der die Seite veraendert, gibt ihm **eine eigene Datei**
+und raeumt sie hinterher weg. Die Probe dafuer ist billig: Pruefsumme von
+`page.html` vor und nach dem Lauf vergleichen.
+
+### Ein Test, der meldet, muss auch rot werden koennen
+
+Am selben Tag meldete `verwandt.py` zwei Probleme und zaehlte trotzdem gruen.
+Seine Zeile lautet `Faelle: 12 | Probleme: [...] | Konsole: keine` und beginnt
+weder mit `FEHLER` noch mit `FEHLT` - also griff keine Regel des Laeufers. Die
+Suite sagte "alle gruen", waehrend ein Test widersprach.
+
+`run-all.sh` kennt dafuer jetzt Regel 5. Aber die Lehre ist allgemeiner: Die
+Suite ist uneinheitlich (61 zusichernde, 45 berichtende Tests), und ein
+berichtender Test ist nur so viel wert, wie der Laeufer von ihm mitbekommt.
+Wer einen neuen Test schreibt, der etwas bloss druckt, prueft nach, **ob der
+Laeufer diese Druckform ueberhaupt als Fehler erkennt**.
+
 ## Was die Suite leistet - und was nicht
 
 | | Zahl | heisst |
