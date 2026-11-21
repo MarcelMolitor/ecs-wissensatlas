@@ -51,7 +51,16 @@ FELD_MUSS = {
     'aea': ['örtlicher Kreis aus CB1 und Anandamid', 'ist damit nicht gemessen'],
     'cbg': ['20 Personen mit künstlich gereizter Haut', 'Reizmodell statt einer Hautkrankheit',
             'Forschungsabteilungen der Hersteller'],
-    'cbn': ['keine Studie', 'minimal'],
+    # 21.11.2026: Hier stand 'keine Studie'. Das war falsch - NCT04908215 ist
+    # eine abgeschlossene Phase 2 einer CBN-Creme. Der Test hat die falsche
+    # Behauptung festgehalten, statt sie zu finden. Jetzt prueft er den
+    # richtigen Sachverhalt: Studie ja, Ergebnis nie berichtet.
+    'cbn': ['NCT04908215', 'kein Ergebnis', 'minimal'],
+}
+
+# Saetze, die in einem Feld NICHT stehen duerfen - der Rueckfallschutz.
+FELD_VERBOTEN = {
+    'cbn': ['keine Studie', 'nie geprueft', 'nie geprüft'],
 }
 
 
@@ -86,6 +95,8 @@ async def main():
                                 % (sid, m.group(1) if m else '??', soll))
             for s in FELD_MUSS[sid]:
                 if s not in t: probleme.append('%s/skin: fehlt »%s«' % (sid, s))
+            for v in FELD_VERBOTEN.get(sid, []):
+                if v in t: probleme.append('%s/skin: widerlegte Behauptung wieder da: »%s«' % (sid, v))
             if sid == 'thc':
                 for s in TAFEL_MUSS:
                     if s not in t: probleme.append('Hauttafel: fehlt »%s«' % s)

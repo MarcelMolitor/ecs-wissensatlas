@@ -5,3 +5,6 @@ tests/__pycache__/
 
 # Bildschirmaufnahmen, die die Tests selbst erzeugen - Ergebnisse, kein Quelltext
 tests/*.png
+
+# Bildschirmfotos, die Tests beim Laufen ablegen
+*.png
