@@ -21,6 +21,23 @@ sein kann:
     Reiter waere sonst ein Treffer, der dem Leser nichts bringt.
  3. Das Antippen bewegt die Karte wirklich in den Blick (top-Wert im Fenster).
 Dazu: Beschriftung nicht leer, und data-jump gesetzt.
+
+NACHGETRAGEN AM 22.11.2026 - die fehlende Leiste: Dieser Test pruefte nur
+Knoepfe, die DA sind. Ein Reiter ohne Leiste war fuer ihn in Ordnung ("if not
+chips: continue"). Marcel hat die neue Anti-DAGLA-Karte nicht gefunden: sie
+liegt im Enzym-Reiter, 1713 Pixel unterhalb des Anfangs - und dieser Reiter
+hatte keine Leiste. Beim Nachzaehlen waren es drei solche Reiter (Enzyme,
+Einflussfaktoren, Wirkstoff-Labor). Alle drei haben jetzt eine; damit das so
+bleibt, prueft der Test ab hier auch die REGEL: Wer mehrere Karten zeigt,
+braucht einen Weg, dorthin zu springen.
+
+ZWEI MESSFEHLER, die mich dabei Zeit gekostet haben, als Warnung:
+ 1. 'data-jump' im QUELLTEXT zaehlen gibt Unsinn - die Knoepfe werden aus
+    einer Liste erzeugt, das Muster steht pro Reiter nur einmal da. Gezaehlt
+    wird am gerenderten DOM, so wie dieser Test es tut.
+ 2. '.qchip' allein greift zu weit: im Reiter "Studien" gibt es .qchip-Knoepfe
+    ohne data-jump (Filter), und im Labor die Voreinstellungen. Der Selektor
+    muss '.jumps .qchip' heissen.
 """
 import os as _os
 HIER = _os.path.dirname(_os.path.abspath(__file__))
@@ -44,6 +61,7 @@ async def main():
         probleme = []
         gezaehlt = 0
         mit_leiste = 0
+        mehrkartig = 0
 
         gruppen = await pg.locator('#groups button').count()
         for g in range(gruppen):
@@ -63,6 +81,16 @@ async def main():
                         ziel: e.getAttribute('data-jump'),
                         text: (e.textContent || '').trim()
                     }))""")
+                # Die Regel: mehrere Karten => eine Leiste. Gezaehlt werden
+                # nur SICHTBARE Karten; ein Reiter mit einer Karte oder ohne
+                # Karten (Glossar, Studienlisten) braucht keine.
+                karten = await pg.evaluate("""() => [...document.querySelectorAll(
+                    '#tabpanel article.card')].filter(e => e.offsetParent).length""")
+                if karten >= 2:
+                    mehrkartig += 1
+                if karten >= 2 and not chips:
+                    probleme.append('[%s] %d Karten, aber keine Sprungleiste'
+                                    % (reiter, karten))
                 if not chips:
                     continue
                 mit_leiste += 1
@@ -113,6 +141,7 @@ async def main():
                                         % (reiter, text, ziel, top))
 
         print('Reiter mit Sprungleiste: %d | Sprungknoepfe geprueft: %d' % (mit_leiste, gezaehlt))
+        print('Reiter mit mehreren Karten (brauchen eine Leiste): %d' % mehrkartig)
         if gezaehlt == 0:
             probleme.append('kein einziger Sprungknopf gefunden - Selektor veraltet?')
         print('Probleme:', probleme or 'keine')

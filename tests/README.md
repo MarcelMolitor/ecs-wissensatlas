@@ -144,7 +144,7 @@ Aenderungen: die meisten Fehler dieses Projekts entstanden nicht beim Hinzufuege
 sondern dadurch, dass das Hinzugefuegte dem widersprach, was schon auf der Seite
 stand — achtmal hat eine neue Angabe einer bestehenden widersprochen.
 
-Zwei weitere Regeln aus Schaden:
+Drei weitere Regeln aus Schaden:
 
 - **Einen Satz nie ohne seine Karte beurteilen.** Vier Fehlalarme entstanden, weil
   ein mit Suchmuster herausgezogener Satz falsch wirkte, waehrend die Ueberschrift
@@ -153,3 +153,13 @@ Zwei weitere Regeln aus Schaden:
   einem dualen FAAH/MAGL-Hemmer richtig, als es geschrieben wurde, und falsch,
   als es jemand nachsah: drei Phase-2-Studien. Behauptungen dieser Art gehoeren
   regelmaessig gegen ClinicalTrials.gov geprueft.
+- **Nicht im Quelltext zaehlen, was der Browser erzeugt.** Am 22.11.2026 habe
+  ich `data-jump` im Quelltext gezaehlt und daraus geschlossen, 16 von 19
+  Reitern haetten eine Sprungleiste. Beides falsch: Die Knoepfe entstehen aus
+  einer Liste, das Muster steht pro Reiter nur einmal da — und es gibt 28
+  Reiter, nicht 19. Beim zweiten Versuch habe ich die Reiter ueber die obere
+  Leiste angeklickt; die wechselt aber nur den Abschnitt, nicht die
+  Reitergruppe, und ich sah dieselben 9 Reiter fuenfmal. Richtig geht es wie in
+  `sprungleisten.py`: erst `#groups button` durchgehen, darin `#tabs button`,
+  und am gerenderten DOM messen. Wer eine Menge pruefen will, zaehlt sie zuerst
+  nachvollziehbar ab; sonst prueft man eine Teilmenge und haelt sie fuer alles.
