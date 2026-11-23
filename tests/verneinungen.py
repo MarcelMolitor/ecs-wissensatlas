@@ -83,12 +83,70 @@ for stoff, begriff in [('cbc', 'cannabichromene'),
         pr.append('%s: die Registerabfrage nennt "%s" nicht' % (stoff, begriff))
 
 # --- 3) Kein Stempel ohne Nachsehen --------------------------------------
-# Drei Aussagen wurden am 23.11. geprueft. Wer einen vierten Stempel von
-# diesem Tag setzt, ohne nachgesehen zu haben, soll hier anschlagen.
+# Jeder Stempel vom 23.11.2026 muss zu einer Sache gehoeren, die an diesem Tag
+# wirklich nachgesehen wurde. Darum keine nackte Zahl, sondern eine Liste: Wer
+# einen Stempel setzt, traegt hier ein, WAS er nachgesehen hat. Sonst schlaegt
+# der Test an - und genau das ist am 23.11. passiert, als die vier neuen
+# CB2-Einsatzgebiete zwei weitere Stempel brachten.
+NACHGESEHEN_23_11 = [
+    'THCP im Studienregister: null Eintraege',
+    'Cannabichromen im Studienregister: ein zurueckgezogener Eintrag',
+    'Cannabinol im Studienregister: elf Eintraege, keiner zur Abwehr',
+    'S-777469 bei Neurodermitis: zwei Studien, keine Ergebnisse',
+    'KHK6188 bei Zoster-Neuralgie: eine Studie, keine Ergebnisse',
+]
 heute = I.count('abgefragt am 23.11.2026')
-if heute != 3:
-    pr.append('Stempel vom 23.11.2026: %d statt 3 – wurde wirklich nachgesehen?'
-              % heute)
+if heute != len(NACHGESEHEN_23_11):
+    pr.append('Stempel vom 23.11.2026: %d, aber %d Dinge als nachgesehen '
+              'eingetragen – wurde wirklich nachgesehen?'
+              % (heute, len(NACHGESEHEN_23_11)))
+
+# --- 3b) Die zwei Programme, die geprueft und nie berichtet wurden --------
+# Diese Klasse ist das Gegenstueck zur Verneinung: Nicht "niemand hat
+# geprueft", sondern "jemand hat geprueft, und niemand erfaehrt es". Sie darf
+# nicht stillschweigend zu einem "gescheitert" werden.
+# Geprueft wird der EINTRAG, nicht ein Zeichenfenster: Beim ersten Versuch
+# nahm ich 1200 Zeichen um die Registernummer und erwischte damit das Wort
+# "gescheitert" aus dem NACHBAREINTRAG (Reizdarm, der wirklich gescheitert
+# ist). Ein gruener Test waere das nicht gewesen, aber ein falscher Alarm, und
+# die kosten dasselbe Vertrauen.
+def cb2_eintrag(key):
+    m = re.search(r"\bCB2_USE\s*=", S[UMFANG:])
+    if not m:
+        return None
+    a = UMFANG + m.start()
+    j = S.find('{', a)
+    tief, k = 0, j
+    while k < len(S):
+        if S[k] == '{':
+            tief += 1
+        elif S[k] == '}':
+            tief -= 1
+        if tief == 0:
+            break
+        k += 1
+    for t in re.split(r"\n (?=\w+:)", S[j:k + 1]):
+        if re.match(r"\{?\s*%s:" % key, t):
+            return t
+    return None
+
+for name, key, nct, pflicht in [
+        ('S-777469 / Neurodermitis', 'neuro', 'NCT00703573',
+         ['keine Ergebnisse hinterlegt', '209']),
+        ('KHK6188 / Zoster-Neuralgie', 'zoster', 'NCT01544296',
+         ['null Treffer', '42 Menschen'])]:
+    t = cb2_eintrag(key)
+    if not t:
+        pr.append('%s: das Einsatzgebiet "%s" gibt es nicht mehr' % (name, key))
+        continue
+    if nct not in t:
+        pr.append('%s: %s ist nicht mehr genannt' % (name, nct))
+    for p in pflicht:
+        if p not in t:
+            pr.append('%s: "%s" fehlt' % (name, p))
+    if 'gescheitert' in t:
+        pr.append('%s: wird als "gescheitert" dargestellt, obwohl kein '
+                  'Ergebnis berichtet wurde' % name)
 
 # --- 4) Die alten Verneinungen, die schon einmal versagt haben -----------
 # cbn.skin darf nie wieder "keine Studie" sagen: Es gibt eine.
@@ -103,7 +161,8 @@ else:
                       % schlecht)
 
 print('Verneinungen mit Beleg und Datum geprüft: %d' % len(FEST))
-print('Abfragen geprüft: 3 | Stempel vom 23.11.2026: %d' % heute)
+print('Am 23.11.2026 nachgesehen: %d Dinge' % len(NACHGESEHEN_23_11))
+print('Abfragen geprüft: 3 | Stempel im Text: %d' % heute)
 print('Probleme:', pr or 'keine')
 if pr:
     sys.exit(1)
