@@ -27,9 +27,31 @@ async def main():
         await pg.click('.chip[data-id="magl"]')
         await pg.wait_for_timeout(500)
         txt = await pg.inner_text('#status')
-        for muss in ['im Januar 2020', 'Ergebnisbericht im Register', '31.10.2026']:
+        # 23.11.2026 nachgezogen. Dieser Test hielt den alten Wortlaut fest:
+        # 'Ergebnisbericht im Register' und den Stempel '31.10.2026'. Beides
+        # stimmte nicht mehr - die Seite sagte damals, zu NCT03625453 gebe es
+        # "weder eine Veroeffentlichung noch einen Ergebnisbericht". Die
+        # Veroeffentlichung gibt es seit 2021 (Mueller-Vahl u. a., Mov Disord),
+        # und ihr Ergebnis fiel zugunsten von Placebo aus. Der Test hielt also
+        # eine falsche Aussage fest - wie schon fuenfmal zuvor an anderer Stelle.
+        #
+        # Darum jetzt zwei Sorten Pruefung:
+        for muss in ['im Januar 2020',          # die Studie selbst
+                     'kein Ergebnisbericht',    # was im Register fehlt
+                     'zugunsten von Placebo',   # wie sie ausgegangen ist
+                     'Pflichtmeldung']:         # warum beides zusammen zaehlt
             if muss not in txt:
                 probleme.append('Satzteil fehlt: ' + muss)
+        # ... und das Datum NICHT woertlich, sondern als Form. Ein Stempel muss
+        # da sein; welcher, entscheidet der Tag, an dem jemand nachgesehen hat.
+        import re as _re
+        if not _re.search(r'abgefragt am \d{1,2}\.\d{1,2}\.20\d\d', txt):
+            probleme.append('kein Datumsstempel am Registerbefund')
+        # Die Seite darf die Studie nicht wieder als unveroeffentlicht fuehren.
+        for schlecht in ['weder eine Veröffentlichung', 'nie veröffentlicht',
+                         'keine Veröffentlichung']:
+            if schlecht in txt:
+                probleme.append('gilt wieder als unveröffentlicht: ' + schlecht)
         kn = pg.locator('#status button[data-card="b-quellen"]')
         if await kn.count() != 1:
             probleme.append('Knopf nicht gefunden: %d' % await kn.count())

@@ -94,6 +94,8 @@ NACHGESEHEN_23_11 = [
     'Cannabinol im Studienregister: elf Eintraege, keiner zur Abwehr',
     'S-777469 bei Neurodermitis: zwei Studien, keine Ergebnisse',
     'KHK6188 bei Zoster-Neuralgie: eine Studie, keine Ergebnisse',
+    'NCT03625453 (MAGL bei Tourette): kein Ergebnisbericht im Register – '
+    'die Veroeffentlichung gibt es aber',
 ]
 heute = I.count('abgefragt am 23.11.2026')
 if heute != len(NACHGESEHEN_23_11):
@@ -160,7 +162,44 @@ else:
             pr.append('cbn.skin: "%s" steht wieder neben einer Studie, die es gibt'
                       % schlecht)
 
+# --- 5) Ein Einzelbefund darf nicht ohne seine Gegenprobe stehen ---------
+# Am 23.11.2026 stand auf der Seite: eine Einzeldosis senkte Tics, und die
+# groessere Studie sei "weder veroeffentlicht noch berichtet". Die
+# Veroeffentlichung gab es seit 2021 - mit umgekehrtem Ergebnis, zugunsten von
+# Placebo. Der Leser nahm mit: vielversprechend, niemand hat nachgesehen. In
+# Wahrheit hatte jemand zwoelf Wochen lang nachgesehen.
+#
+# Das ist die Schwester der veralteten Verneinung: ein frueher Befund, dessen
+# Widerlegung fehlt. Darum die Regel: Wo der Einzeldosis-Befund zitiert wird,
+# muss die zwoelfwoechige Studie im selben Atemzug stehen - und mit ihrer
+# RICHTUNG, nicht nur mit ihrer Nummer.
+EINZEL, GROSS = '34847610', '34117788'
+stellen = [m.start() for m in re.finditer(r'\[\[%s\]\]' % EINZEL, I)]
+if not stellen:
+    pr.append('Der Tourette-Einzeldosis-Befund (%s) ist nicht mehr zitiert' % EINZEL)
+for i in stellen:
+    if GROSS not in I[max(0, i - 200):i + 700]:
+        pr.append('Einzeldosis-Befund ohne die zwölfwöchige Studie: …%s…'
+                  % re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', I[max(0, i - 110):i + 150])))
+for i in [m.start() for m in re.finditer(r'\[\[%s\]\]' % GROSS, I)]:
+    umfeld = I[max(0, i - 700):i + 120]
+    if 'zugunsten von Placebo' not in umfeld and 'negativ' not in umfeld:
+        pr.append('Die zwölfwöchige Studie wird ohne ihre Richtung zitiert')
+# ... und die Seite darf sie nirgends wieder als unveroeffentlicht fuehren
+j = I.find('NCT03625453')
+if j < 0:
+    pr.append('NCT03625453 ist nicht mehr genannt')
+else:
+    umfeld = I[max(0, j - 1200):j + 600]
+    for schlecht in ['unveröffentlicht', 'nie veröffentlicht', 'keine Veröffentlichung',
+                     'weder eine Veröffentlichung']:
+        if schlecht in umfeld:
+            pr.append('NCT03625453 gilt wieder als unveröffentlicht ("%s") – '
+                      'die Arbeit ist 2021 erschienen' % schlecht)
+
 print('Verneinungen mit Beleg und Datum geprüft: %d' % len(FEST))
+print('Einzelbefunde mit Pflicht-Gegenprobe: 1 (Tourette, %d Fundstellen)'
+      % len(stellen))
 print('Am 23.11.2026 nachgesehen: %d Dinge' % len(NACHGESEHEN_23_11))
 print('Abfragen geprüft: 3 | Stempel im Text: %d' % heute)
 print('Probleme:', pr or 'keine')
