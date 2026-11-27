@@ -145,7 +145,14 @@ async def main():
             const zellen = document.querySelectorAll('.cb1m .cb1cell').length;
             const leer = document.querySelectorAll('.cb1m .cb1dash').length;
             const still = [...document.querySelectorAll('.cb1m .cb1cell')]
-                .filter(c => /begonnen, kein Ergebnis/.test(c.textContent)).length;
+                .filter(c => /kein Ergebnis/.test(c.textContent)).length;
+            /* 27.11.2026: Vorher stand hier woertlich 'begonnen, kein
+               Ergebnis'. Die Seite selbst definiert still als
+               /kein Ergebnis/ (cb1Still), und als vier weitere stille
+               Zellen dazukamen ('abgebrochen, kein Ergebnis',
+               'abgeschlossen, kein Ergebnis'), zaehlte dieser Test
+               weiter eine. Ein Test, der enger prueft als die Sache
+               selbst, meldet Richtiges als Fehlendes. */
             return {sp, ze, zellen, leer, still,
                     txt: document.getElementById('tabpanel').innerText};
         }""")
@@ -172,6 +179,65 @@ async def main():
             probleme.append('mehr stille (%d) als angefasste (%d) Zellen'
                             % (r['still'], angefasst))
         print('  ok  %d angefasst, davon %d still' % (angefasst, r['still']))
+
+        # --- 27.11.2026: Kein Kreuz ueber einem Text, der Stille sagt -------
+        # Bis heute schrieb der Trichter fuer FAAH und CB2 'Hier waere Schluss'
+        # samt Kreuz fest ein. Damit stand ueber Saetzen, die ausdruecklich
+        # sagen "niemand weiss, wie es ausging", eine Markierung, die ein
+        # Ergebnis behauptet. Bei CB1 war das am 20.11. behoben, in den beiden
+        # anderen Modi nicht - zwei CB2-Eintraege trugen den Widerspruch seit
+        # dem 23.11. Dieser Test geht jeden Modus und jedes Einsatzgebiet durch
+        # und vergleicht AUSSAGE und MARKIERUNG.
+        widersprueche = await pg.evaluate("""async () => {
+            const raus = [];
+            const warte = ms => new Promise(r => setTimeout(r, ms));
+            const moden = [...document.querySelectorAll('.seg[data-lab="mode"] button')];
+            for (const mb of moden) {
+                mb.click(); await warte(420);
+                const feld = document.getElementById('labUse');
+                if (!feld) continue;
+                for (const opt of [...feld.options]) {
+                    feld.value = opt.value;
+                    feld.dispatchEvent(new Event('change', {bubbles: true}));
+                    await warte(220);
+                    const f = document.querySelector('.stage-fail');
+                    if (!f) continue;
+                    const kopf = f.querySelector('b') ? f.querySelector('b').textContent : '';
+                    const txt = f.innerText;
+                    const hier = [...document.querySelectorAll('.stage-n')]
+                        .map(e => e.textContent.trim());
+                    const zeichen = hier.find(z => z === '?' || z === '\\u2715') || '';
+                    // Sagt der Text, dass nichts berichtet wurde?
+                    const sagtStill = /nie berichtet|kein Ergebnis|keine Ergebnisse|ohne Ergebnis/.test(txt);
+                    /* 27.11.2026, zweiter Anlauf: Vorher stand hier ODER.
+                       Die Sabotage - feste Ueberschrift 'Hier waere Schluss'
+                       bei unveraendertem Fragezeichen - lief damit durch, weil
+                       das Zeichen allein schon genuegte. Beide Signale muessen
+                       stimmen; jedes fuer sich kann den Leser taeuschen. */
+                    const kopfStill = kopf.indexOf('still') >= 0;
+                    const zeichenStill = zeichen === '?';
+                    const zeigtStill = kopfStill && zeichenStill;
+                    /* NUR diese Richtung ist ein Fehler: ein Kreuz ueber
+                       einem Text, der sagt, es sei nichts berichtet worden.
+                       Umgekehrt ist ein Fragezeichen ueber einem Text, der
+                       meine Suchwoerter nicht benutzt, kein falsches
+                       Versprechen - peri|gastro sagt "Begonnen und dann still
+                       geworden" und ist voellig richtig markiert. Mein erster
+                       Entwurf pruefte beide Richtungen und meldete genau diese
+                       Zelle als Widerspruch. */
+                    if (sagtStill && !zeigtStill) {
+                        raus.push((mb.textContent.trim() + '/' + opt.value
+                            + ': Der Text sagt, es wurde nichts berichtet, die Markierung behauptet ein Ergebnis'
+                            + ' ("' + kopf + '", Zeichen ' + (zeichen || '-') + ')'));
+                    }
+                }
+            }
+            return raus;
+        }""")
+        for w in widersprueche:
+            probleme.append('Markierung widerspricht dem Text: ' + w)
+        if not widersprueche:
+            print('  ok  Aussage und Markierung stimmen in allen Modi ueberein')
 
         print('Probleme:', probleme or 'keine')
         print('Fehler:', fehler or 'keine')

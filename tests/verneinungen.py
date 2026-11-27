@@ -134,9 +134,12 @@ NACHGESEHEN = {
         'KHK6188 bei Zoster-Neuralgie: eine Studie, keine Ergebnisse',
         'NCT03625453 (MAGL bei Tourette): kein Ergebnisbericht im Register – '
         'die Veroeffentlichung gibt es aber',
-        'Die vier unberichteten Rimonabant-Programme (Praediabetes NCT00325650, '
-        'Essanfaelle NCT00481975, NASH NCT00576667, Alzheimer NCT00380302): '
-        'alle has_results = false, keine Arbeit in PubMed',
+        ('Die vier unberichteten Rimonabant-Programme (Praediabetes NCT00325650, '
+         'Essanfaelle NCT00481975, NASH NCT00576667, Alzheimer NCT00380302): '
+         'alle has_results = false, keine Arbeit in PubMed. Zitiert an zwei '
+         'Stellen: Quellenkarte b-quellen und Labor (CB1_RUN block|prae) – '
+         'der Laboreintrag traegt bewusst das Datum der tatsaechlichen '
+         'Nachschau vom 23.11., nicht das Datum seines Einbaus am 27.11.', 2),
     ],
     '27.11.2026': [
         'NCT02889224 (VISECA, Endocannabinoide beim Cushing-Syndrom, '
@@ -145,14 +148,36 @@ NACHGESEHEN = {
         'CB1-Blocker GEGEN das Cushing-Syndrom: keine einzige Studie im '
         'Register – deshalb kein Einsatzgebiet und kein siebtes '
         'Rimonabant-Programm',
-        'NCT00822744 (FIDELIO, FAAH-Hemmer bei Altersdepression, 527 '
-        'Teilnehmende, abgeschlossen 02/2010): kein Ergebnisbericht, keine '
-        'Arbeit in PubMed – die groesste FAAH-Pruefung am Menschen',
+        ('NCT00822744 (FIDELIO, FAAH-Hemmer bei Altersdepression, 527 '
+         'Teilnehmende, abgeschlossen 02/2010): kein Ergebnisbericht, keine '
+         'Arbeit in PubMed – die groesste FAAH-Pruefung am Menschen. Zitiert '
+         'an zwei Stellen: Enzymkarte e-faahmensch und Labor '
+         '(LAB_USE.altersdepression)', 2),
         'NCT07282574 (Roche, MAGL-Hemmer bei fortschreitender MS, Phase 2, '
         '360 Teilnehmende, 114 Zentren): laeuft seit 03/2026, Abschluss '
         'geplant 05/2028 – noch keine Ergebnisse zu erwarten',
+        'NCT06577090 (Nimacimab, CBeyond): eine Woche nach dem genannten '
+        'Abschluss des Hauptteils unveraendert – Termin steht, nimmt niemanden '
+        'mehr auf, has_results weiter false. Neu gefunden: Verlaengerung seit '
+        '05/2025 um 26 Behandlungswochen plus 13 Wochen Nachbeobachtung, '
+        'daher Gesamtabschluss erst 02/2027',
+        'Irafamdastat (frueher CC-97489/BMS-986368), vier Eintraege '
+        'nachgesehen: NCT06782490 (200, 61 Orte), NCT06808984 (120, 77 Orte), '
+        'NCT07704840 (42) alle RECRUITING; NCT05099822 (84) ABGEBROCHEN ohne '
+        'genannten Grund. Dazu NCT05065541, PET an 32 Gesunden zur '
+        'Enzymverfuegbarkeit im Gehirn, abgeschlossen 01/2024, '
+        'has_results false, keine Arbeit in PubMed',
     ],
 }
+# 27.11.2026 nachgeschaerft: Die Regel nahm an, ein Stempel sei eine Nachschau.
+# Das stimmt nicht, wenn DIESELBE Nachschau an zwei Stellen zitiert wird - die
+# 527er-Studie steht in der Enzymkarte und im Labor. Statt die Liste mit einer
+# Dopplung zu verfaelschen, darf ein Eintrag jetzt sagen, an wie vielen Stellen
+# er zitiert wird: ('Text', 2). Ohne Zahl gilt 1.
+def _soll(liste):
+    return sum(e[1] if isinstance(e, tuple) else 1 for e in liste)
+
+
 gefunden = sorted(set(re.findall(r'abgefragt am (\d{1,2}\.\d{1,2}\.20\d\d)', I)))
 for tag in gefunden:
     if tag not in NACHGESEHEN:
@@ -160,10 +185,10 @@ for tag in gefunden:
                   'was wurde an dem Tag nachgesehen?' % tag)
 for tag, liste in NACHGESEHEN.items():
     n = I.count('abgefragt am ' + tag)
-    if n != len(liste):
-        pr.append('Stempel vom %s: %d im Text, aber %d Dinge als nachgesehen '
-                  'eingetragen – wurde wirklich nachgesehen?'
-                  % (tag, n, len(liste)))
+    if n != _soll(liste):
+        pr.append('Stempel vom %s: %d im Text, aber %d Fundstellen als '
+                  'nachgesehen eingetragen – wurde wirklich nachgesehen?'
+                  % (tag, n, _soll(liste)))
 heute = sum(I.count('abgefragt am ' + t) for t in NACHGESEHEN)
 
 # --- 3b) Die zwei Programme, die geprueft und nie berichtet wurden --------
