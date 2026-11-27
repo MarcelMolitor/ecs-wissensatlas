@@ -79,6 +79,32 @@ async def main():
             k += 1
         if '<b>' in S[j:k - 1]:
             probleme.append('%s enthaelt <b> - wird im Abbruchkasten zur Ueberschrift' % name)
+
+    # --- Die eigenen Begruendungen der Einsatzgebiete einsammeln ----------
+    # 27.11.2026, zweiter Anlauf: Der erste Entwurf dieser Pruefung las nur
+    # den dargestellten Text und suchte darin nach "kein Ergebnis". Das ergab
+    # einen FEHLALARM, sobald der Angriffspunkt "FAAH + MAGL" gewaehlt war:
+    # Dort ueberschreibt die Seite den Text mit einer MODUS-eigenen
+    # Begruendung (Toleranz im Tierversuch), in der zufaellig auch
+    # "kein Ergebnisbericht" steht - gemeint ist dort eine PET-Studie, nicht
+    # das Urteil. Die Pruefung muss also erst erkennen, OB ueberhaupt die
+    # Begruendung des Einsatzgebiets gezeigt wird. Dazu wird sie aus der
+    # Quelle gelesen und als Textschnipsel mitgegeben.
+    begruendung = {}
+    for name in ('LAB_USE', 'CB2_USE', 'MAGL_USE'):
+        m = re.search(r'const %s = \{' % name, S)
+        if not m:
+            continue
+        j = m.end(); t = 1; k = j
+        while t:
+            if S[k] == '{': t += 1
+            elif S[k] == '}': t -= 1
+            k += 1
+        for e in re.finditer(r"\n (\w+):\[(.*?)\],?\n(?= \w+:|\})", S[j - 1:k], re.S):
+            felder = re.findall(r"'((?:[^'\\]|\\.)*)'", e.group(2))
+            if felder:
+                begruendung[e.group(1)] = felder[-1][:45]
+
     # --- Quelldatei: eine einzige Definition fuer "still" ---
     if 'const cb1Still = r =>' not in S:
         probleme.append('cb1Still() fehlt - Zahl und Markierung koennten auseinanderlaufen')
@@ -188,12 +214,19 @@ async def main():
         # anderen Modi nicht - zwei CB2-Eintraege trugen den Widerspruch seit
         # dem 23.11. Dieser Test geht jeden Modus und jedes Einsatzgebiet durch
         # und vergleicht AUSSAGE und MARKIERUNG.
-        widersprueche = await pg.evaluate("""async () => {
+        widersprueche = await pg.evaluate("""async (BEGR) => {
             const raus = [];
             const warte = ms => new Promise(r => setTimeout(r, ms));
             const moden = [...document.querySelectorAll('.seg[data-lab="mode"] button')];
             for (const mb of moden) {
                 mb.click(); await warte(420);
+                /* 27.11.2026: Der Angriffspunkt hat seit heute drei Werte, und
+                   "nur MAGL" bringt eine EIGENE Einsatzgebietsliste mit. Ohne
+                   diese innere Schleife blieben zehn Gebiete ungeprueft - und
+                   genau in dieser Liste sind acht von zehn still. */
+                const ziele = [...document.querySelectorAll('.seg[data-lab="ziel"] button')];
+                for (const zb of (ziele.length ? ziele : [null])) {
+                    if (zb) { zb.click(); await warte(420); }
                 const feld = document.getElementById('labUse');
                 if (!feld) continue;
                 for (const opt of [...feld.options]) {
@@ -208,7 +241,13 @@ async def main():
                         .map(e => e.textContent.trim());
                     const zeichen = hier.find(z => z === '?' || z === '\\u2715') || '';
                     // Sagt der Text, dass nichts berichtet wurde?
-                    const sagtStill = /nie berichtet|kein Ergebnis|keine Ergebnisse|ohne Ergebnis/.test(txt);
+                    /* Zeigt der Kasten ueberhaupt die Begruendung DIESES
+                       Einsatzgebiets? Wenn nicht, hat ein Modus- oder
+                       Angriffspunkt-Zweig den Text ueberschrieben, und ueber
+                       dessen Markierung sagt diese Regel nichts. */
+                    const eigen = BEGR[opt.value];
+                    if (!eigen || txt.indexOf(eigen) < 0) continue;
+                    const sagtStill = /nie berichtet|kein Ergebnis|keine Ergebnisse|ohne Ergebnis/.test(eigen);
                     /* 27.11.2026, zweiter Anlauf: Vorher stand hier ODER.
                        Die Sabotage - feste Ueberschrift 'Hier waere Schluss'
                        bei unveraendertem Fragezeichen - lief damit durch, weil
@@ -225,15 +264,17 @@ async def main():
                        geworden" und ist voellig richtig markiert. Mein erster
                        Entwurf pruefte beide Richtungen und meldete genau diese
                        Zelle als Widerspruch. */
+                    const wo = mb.textContent.trim() + (zb ? '/' + zb.textContent.trim() : '');
                     if (sagtStill && !zeigtStill) {
-                        raus.push((mb.textContent.trim() + '/' + opt.value
+                        raus.push((wo + '/' + opt.value
                             + ': Der Text sagt, es wurde nichts berichtet, die Markierung behauptet ein Ergebnis'
                             + ' ("' + kopf + '", Zeichen ' + (zeichen || '-') + ')'));
                     }
                 }
+                }
             }
             return raus;
-        }""")
+        }""", begruendung)
         for w in widersprueche:
             probleme.append('Markierung widerspricht dem Text: ' + w)
         if not widersprueche:

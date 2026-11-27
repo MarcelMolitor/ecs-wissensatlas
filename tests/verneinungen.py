@@ -156,6 +156,25 @@ NACHGESEHEN = {
         'NCT07282574 (Roche, MAGL-Hemmer bei fortschreitender MS, Phase 2, '
         '360 Teilnehmende, 114 Zentren): laeuft seit 03/2026, Abschluss '
         'geplant 05/2028 – noch keine Ergebnisse zu erwarten',
+        # Nachgetragen am 27.11.2026, nachdem genau diese Regel gemeldet
+        # hatte, dass zwei Stempel im Text stehen, die hier fehlten. Sie
+        # hat also getan, wofuer sie da ist.
+        'AEF0117 im Register (Intervention AEF0117): genau 8 Studien – '
+        'eine Phase 2b (NCT05322941, 333 Behandlungssuchende, '
+        'abgeschlossen, has_results = false), eine Phase 2a (NCT03717272, '
+        '29), sechs Phase 1. KEINE Phase 3 – deshalb ist „zwei '
+        'Phase-3-Endpunkte“ ersetzt. Dazu die umgekehrte Richtung: '
+        'positiv allosterische CB1-Modulatoren (auch ZCZ011, GAT211, '
+        'GAT229, ABD1085) ergeben im Register 0 Treffer – die '
+        'Verstaerker-Richtung ist am Menschen wirklich nie geprueft',
+        'Trockenes Auge und Cannabinoide: im Register 0 Studien zu '
+        'trockenem Auge, Keratoconjunctivitis sicca oder Sjoegren; von 30 '
+        'augenbezogenen Cannabinoid-Studien misst keine ein Traenenmass. '
+        'In PubMed kein Schirmer-Test, keine Traenenfilm-Aufreisszeit und '
+        'keine Traenenosmolaritaet am Menschen – wohl aber vier Berichte '
+        'ueber trockene Augen und eine OSDI-Messung (42524865), deshalb '
+        'steht in der Augentafel jetzt die Dreiteilung statt „nicht '
+        'belegt“',
         'NCT06577090 (Nimacimab, CBeyond): eine Woche nach dem genannten '
         'Abschluss des Hauptteils unveraendert – Termin steht, nimmt niemanden '
         'mehr auf, has_results weiter false. Neu gefunden: Verlaengerung seit '
@@ -238,17 +257,64 @@ for name, key, nct, pflicht in [
         pr.append('%s: wird als "gescheitert" dargestellt, obwohl kein '
                   'Ergebnis berichtet wurde' % name)
 
-# --- 4) Die alten Verneinungen, die schon einmal versagt haben -----------
-# cbn.skin darf nie wieder "keine Studie" sagen: Es gibt eine.
-i = I.find('NCT04908215')
-if i < 0:
-    pr.append('cbn.skin: die Studie NCT04908215 ist nicht mehr genannt')
-else:
-    umfeld = I[max(0, i - 900):i + 300]
-    for schlecht in ['keine Studie', 'nie geprüft', 'nicht geprüft']:
+# --- 4) Die Verneinungen, die schon einmal versagt haben -----------------
+# DIE FEHLERART: Die Seite sagt, es gebe keine Studie am Menschen - und es
+# gibt eine. Das ist der teuerste Fehler, den diese Seite machen kann, denn er
+# klingt nach Sorgfalt. Bisher viermal gefunden, jedes Mal von Hand:
+#
+#   cbn.skin    "keine Studie" neben einer abgeschlossenen Phase 2
+#   Rimonabant  "abgeschlossene Geschichte" neben vier laufenden Studien
+#   CB2 entz    "nie geprueft" neben drei gescheiterten Geschwistern (27.11.)
+#   Echinacea   "keine Studie am Menschen" neben einer randomisierten (27.11.)
+#
+# Darum eine TABELLE statt einer Regel je Fund: Wer den fuenften findet,
+# haengt eine Zeile an, statt einen Block zu schreiben. Je Zeile: der Beleg,
+# der dort stehen muss, das Fenster um ihn herum, und die Saetze, die darin
+# nicht mehr vorkommen duerfen.
+#
+# ANKER IST DIE ZITATSTELLE, nicht die Nummer. Beim ersten Versuch stand hier
+# '28610718'; die Nummer steht aber auch in der Quellenliste, 315 581 Zeichen
+# vor der Karte. Das Fenster lag damit an der voellig falschen Stelle, und die
+# Regel war zahnlos - aufgefallen ist das erst, als ich die Verneinung
+# versuchsweise wieder einbaute und nichts anschlug.
+VERSAGT = [
+    ('NCT04908215', 'cbn.skin', 900, 300,
+     ['keine Studie', 'nie geprüft', 'nicht geprüft']),
+    # 27.11.2026: Hier stand "Es gibt keine Studie am Menschen, die einen
+    # Nutzen von Echinacea über das Endocannabinoid-System zeigt." Laut PubMed
+    # gibt es sie: 28610718, randomisiert und doppelblind, Hautscore bedeutsam
+    # gesenkt, auch gegenüber dem Vergleichspräparat.
+    ('[[28610718]]', 'Echinacea', 1200, 900,
+     ['keine Studie am Menschen', 'gibt keine Studie', 'nie am Menschen geprüft']),
+]
+for beleg, wer, vor_, nach_, boese in VERSAGT:
+    i = I.find(beleg)
+    if i < 0:
+        pr.append('%s: der Beleg %s ist nicht mehr genannt' % (wer, beleg))
+        continue
+    umfeld = I[max(0, i - vor_):i + nach_]
+    for schlecht in boese:
         if schlecht in umfeld:
-            pr.append('cbn.skin: "%s" steht wieder neben einer Studie, die es gibt'
-                      % schlecht)
+            pr.append('%s: "%s" steht wieder neben einer Studie, die es gibt'
+                      % (wer, schlecht))
+
+# Und die Echinacea-Karte muss den Unterschied weiter machen, um den es geht:
+# ein Nutzen ist gezeigt, der Weg nicht. Faellt der zweite Teil weg, behauptet
+# die Seite ploetzlich mehr als ihre Quelle - der umgekehrte Fehler, aber
+# derselbe Schaden.
+# Anker ist die ZITATSTELLE [[...]], nicht die bloße Nummer: die steht auch
+# in der Quellenliste, und dort steht der Kartentext naturgemäß nicht. Beim
+# ersten Versuch meldete die Regel vier Fehler, die es nicht gab.
+i = I.find('[[28610718]]')
+if i >= 0:
+    umfeld = I[max(0, i - 1500):i + 1500]
+    for muss, warum in [
+            ('nicht der Weg', 'der Unterschied zwischen Nutzen und Weg'),
+            ('nicht der Rezeptor', 'der Hinweis, dass Haut gemessen wurde'),
+            ('Herstellerfirma', 'der Interessenkonflikt der Autoren'),
+            ('21092239', 'der Zellversuch, in dem der Effekt nicht über CB2 lief')]:
+        if muss not in umfeld:
+            pr.append('Echinacea: %s fehlt' % warum)
 
 # --- 5) Ein Einzelbefund darf nicht ohne seine Gegenprobe stehen ---------
 # Am 23.11.2026 stand auf der Seite: eine Einzeldosis senkte Tics, und die
@@ -329,6 +395,7 @@ else:
             pr.append('Einschränkung fehlt im Abschnitt: ' + muss)
 
 print('Verneinungen mit Beleg und Datum geprüft: %d' % len(FEST))
+print('Einmal versagte Verneinungen, die bewacht werden: %d' % len(VERSAGT))
 print('Einzelbefunde mit Pflicht-Gegenprobe: 1 (Tourette, %d Fundstellen)'
       % len(stellen))
 for tag in sorted(NACHGESEHEN):

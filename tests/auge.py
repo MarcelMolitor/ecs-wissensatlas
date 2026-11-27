@@ -33,19 +33,40 @@ EXE = _CHROME
 SEITE = sys.argv[1] if len(sys.argv) > 1 else 'file://' + HIER + '/page.html'
 QUELLE = SEITE.replace('file://', '')
 
-NEU = ['39474241', '40838892', '39630463']
+# 27.11.2026: vier Humanbelege und ein zweiter Tierbefund dazu.
+NEU = ['39474241', '40838892', '39630463',
+       '32852544',   # THC senkt den Traenenfluss bei MAENNLICHEN Maeusen
+       '20805210',   # trockene Augen als gemeldete Nebenwirkung, randomisiert
+       '42524865',   # OSDI gemessen, kein Unterschied (gegen ein Opioid)
+       '885679']     # der einzige objektive Traenenmesswert: eher MEHR Traenen
 TAFEL_MUSS = [
     'Seit den 1970er Jahren ist gemessen',
     'eine Behandlung ist daraus bis heute nicht geworden',
     'nicht ausreichend, um Cannabinoide gegen den Grünen Star zu empfehlen',
     'nur am Tier gemessen ist und dort vom Geschlecht abhängt',
-    'Ob Cannabis beim Menschen die Augen trocken macht, ist auf dieser Seite nicht belegt',
+    # 27.11.2026: Hier stand bis heute "Ob Cannabis beim Menschen die Augen
+    # trocken macht, ist auf dieser Seite nicht belegt". Streng gelesen war das
+    # wahr - eine Aussage ueber die Seite, nicht ueber die Welt. Als
+    # Wissensaussage war es zu eng: Am Menschen ist gemeldet, gemessen und
+    # teils nie geprueft, und der einzige objektive Traenenmesswert zeigt in
+    # die ANDERE Richtung. Die Tafel traegt jetzt die Dreiteilung, und dieser
+    # Test haelt alle drei Teile fest - fehlt einer, ist die Aussage wieder
+    # schiefer als die Belege.
+    'Am Menschen ist die Lage dreigeteilt',
+    'Gemeldet, aber nicht gemessen',
+    'Gemessen und berichtet',
+    'Nie geprüft',
+    'in die andere Richtung',
+    'Schirmer-Test',
+    'abgefragt am 27.11.2026',
 ]
 TAFEL_VERBOTEN = [
     'hilft gegen den Grünen Star',
     'wirksam gegen Glaukom',
     'macht die Augen trocken',          # Alltagsbeobachtung als Befund
     'Cannabis trocknet die Augen aus',
+    # Die alte, zu enge Verneinung darf nicht zurueckkommen.
+    'die Augen trocken macht, ist auf dieser Seite nicht belegt',
 ]
 FELD_MUSS = {
     'nab': ['Für Nabilon selbst trägt diese Seite keine Augenstudie'],

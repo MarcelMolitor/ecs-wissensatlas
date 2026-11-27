@@ -27,7 +27,13 @@ PFLICHT = [('mon', 'liver',    'Nicht untersucht.'),
            ('rim', 'brain',    'Starke Wirkung.'),
            ('rim', 'muskel',   'Schwache Wirkung.'),
            ('2ag', 'brain',    'Starke Wirkung.'),
-           ('2ag', 'pankreas', 'Schwache Wirkung.')]
+           ('2ag', 'pankreas', 'Schwache Wirkung.'),
+           # 27.11.2026: der vierte Zustand. "nie geprueft" ist nicht dasselbe
+           # wie "geprueft und nichts gefunden" - die Skala konnte das nicht
+           # ausdruecken, und mon.niere stand deshalb auf "Deutliche Wirkung"
+           # ueber einem Ergebnis ohne Unterschied zu Placebo. Ein Organfeld
+           # darf jetzt ein drittes Element 'ohne' tragen.
+           ('mon', 'niere',    'Geprüft, keine Wirkung.')]
 # Ein Organ, fuer das der Stoff gar keinen Eintrag hat: muss die alte Wendung zeigen.
 OHNE_EINTRAG = ('rim', 'auge', 'Keine nennenswerte Wirkung.')
 
