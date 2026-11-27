@@ -145,6 +145,12 @@ NACHGESEHEN = {
         'CB1-Blocker GEGEN das Cushing-Syndrom: keine einzige Studie im '
         'Register – deshalb kein Einsatzgebiet und kein siebtes '
         'Rimonabant-Programm',
+        'NCT00822744 (FIDELIO, FAAH-Hemmer bei Altersdepression, 527 '
+        'Teilnehmende, abgeschlossen 02/2010): kein Ergebnisbericht, keine '
+        'Arbeit in PubMed – die groesste FAAH-Pruefung am Menschen',
+        'NCT07282574 (Roche, MAGL-Hemmer bei fortschreitender MS, Phase 2, '
+        '360 Teilnehmende, 114 Zentren): laeuft seit 03/2026, Abschluss '
+        'geplant 05/2028 – noch keine Ergebnisse zu erwarten',
     ],
 }
 gefunden = sorted(set(re.findall(r'abgefragt am (\d{1,2}\.\d{1,2}\.20\d\d)', I)))
