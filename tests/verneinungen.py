@@ -88,20 +88,77 @@ for stoff, begriff in [('cbc', 'cannabichromene'),
 # einen Stempel setzt, traegt hier ein, WAS er nachgesehen hat. Sonst schlaegt
 # der Test an - und genau das ist am 23.11. passiert, als die vier neuen
 # CB2-Einsatzgebiete zwei weitere Stempel brachten.
-NACHGESEHEN_23_11 = [
-    'THCP im Studienregister: null Eintraege',
-    'Cannabichromen im Studienregister: ein zurueckgezogener Eintrag',
-    'Cannabinol im Studienregister: elf Eintraege, keiner zur Abwehr',
-    'S-777469 bei Neurodermitis: zwei Studien, keine Ergebnisse',
-    'KHK6188 bei Zoster-Neuralgie: eine Studie, keine Ergebnisse',
-    'NCT03625453 (MAGL bei Tourette): kein Ergebnisbericht im Register – '
-    'die Veroeffentlichung gibt es aber',
-]
-heute = I.count('abgefragt am 23.11.2026')
-if heute != len(NACHGESEHEN_23_11):
-    pr.append('Stempel vom 23.11.2026: %d, aber %d Dinge als nachgesehen '
-              'eingetragen – wurde wirklich nachgesehen?'
-              % (heute, len(NACHGESEHEN_23_11)))
+# 27.11.2026 umgebaut: Vorher hing diese Regel an einem einzigen Datum. Das
+# geht nur bis zum naechsten Arbeitstag gut - der 27.11. brachte zwei neue
+# Stempel, die unbemerkt durchgelaufen waeren, weil nur der 23.11. gezaehlt
+# wurde. Jetzt ein Datum pro Eintrag: Wer irgendwann einen Stempel setzt, muss
+# unter SEINEM Datum eintragen, was er nachgesehen hat, und ein Datum, das im
+# Text auftaucht aber hier fehlt, schlaegt an.
+# NACHGETRAGEN am 27.11.2026, und zwar mit Vorbehalt: Diese drei Tage lagen
+# vor dieser Regel. Ihre Eintraege sind aus dem beschrieben, WAS DIE SEITE
+# SAGT - ich habe diese Abfragen nicht wiederholt. Sie stehen hier, damit die
+# Regel greift, nicht als Bestaetigung. Wer einen davon anfasst, sieht neu
+# nach und setzt sein eigenes Datum.
+NACHGESEHEN = {
+    '15.11.2026': [
+        'Nimacimab NCT06577090: Pruefplan - was ein peripher begrenzter '
+        'Antikoerper messen wuerde und was nicht',
+        'Ein Pruefplan mit sechs Teilnehmenden, der ohne Ergebnis blieb: '
+        'belegt ist das Prinzip, nicht die Wirkung',
+        'Drei Studien, die sich auf Spastik und Unruhe richten - '
+        'Registerstand',
+        'Ein weiterer Pruefplan-/Registerstand im Organfeld (NICHT '
+        'wiederholt, aus dem Seitentext nachgetragen)',
+    ],
+    '21.11.2026': [
+        'Der dritte Zustand - angefasst, ohne berichtetes Ergebnis: '
+        'Registerstand',
+        'Nimacimab NCT06577090: Absicht klar, Wirkung nicht - daher '
+        'niedrige Belegstufe',
+        'NCT03900325: Nebenbeobachtung, ohne Ergebnis, Registerstand seit '
+        'Jahren unbekannt',
+        'NCT05622994: sollte 11/2023 fertig sein, Eintrag seitdem '
+        '"unbekannt", nichts berichtet',
+    ],
+    '22.11.2026': [
+        'US-Patent 6.630.507: am 21.04.2019 abgelaufen (Google Patents)',
+        'NCT01385124, NCT01596075, NCT02392780, NCT02478424: alle vier auf '
+        '"unbekannt", keine berichtet Ergebnisse',
+        'NCT03093402: im Register und als Kongressbeitrag, kein Aufsatz',
+    ],
+    '23.11.2026': [
+        'THCP im Studienregister: null Eintraege',
+        'Cannabichromen im Studienregister: ein zurueckgezogener Eintrag',
+        'Cannabinol im Studienregister: elf Eintraege, keiner zur Abwehr',
+        'S-777469 bei Neurodermitis: zwei Studien, keine Ergebnisse',
+        'KHK6188 bei Zoster-Neuralgie: eine Studie, keine Ergebnisse',
+        'NCT03625453 (MAGL bei Tourette): kein Ergebnisbericht im Register – '
+        'die Veroeffentlichung gibt es aber',
+        'Die vier unberichteten Rimonabant-Programme (Praediabetes NCT00325650, '
+        'Essanfaelle NCT00481975, NASH NCT00576667, Alzheimer NCT00380302): '
+        'alle has_results = false, keine Arbeit in PubMed',
+    ],
+    '27.11.2026': [
+        'NCT02889224 (VISECA, Endocannabinoide beim Cushing-Syndrom, '
+        'Bordeaux): abgeschlossen 09/2013, has_results = false, keine Arbeit '
+        'in PubMed',
+        'CB1-Blocker GEGEN das Cushing-Syndrom: keine einzige Studie im '
+        'Register – deshalb kein Einsatzgebiet und kein siebtes '
+        'Rimonabant-Programm',
+    ],
+}
+gefunden = sorted(set(re.findall(r'abgefragt am (\d{1,2}\.\d{1,2}\.20\d\d)', I)))
+for tag in gefunden:
+    if tag not in NACHGESEHEN:
+        pr.append('Stempel vom %s im Text, aber kein Eintrag in NACHGESEHEN – '
+                  'was wurde an dem Tag nachgesehen?' % tag)
+for tag, liste in NACHGESEHEN.items():
+    n = I.count('abgefragt am ' + tag)
+    if n != len(liste):
+        pr.append('Stempel vom %s: %d im Text, aber %d Dinge als nachgesehen '
+                  'eingetragen – wurde wirklich nachgesehen?'
+                  % (tag, n, len(liste)))
+heute = sum(I.count('abgefragt am ' + t) for t in NACHGESEHEN)
 
 # --- 3b) Die zwei Programme, die geprueft und nie berichtet wurden --------
 # Diese Klasse ist das Gegenstueck zur Verneinung: Nicht "niemand hat
@@ -197,11 +254,56 @@ else:
             pr.append('NCT03625453 gilt wieder als unveröffentlicht ("%s") – '
                       'die Arbeit ist 2021 erschienen' % schlecht)
 
+# --- 6) Das unberichtete Programm: Summe und Einordnung ------------------
+# Am 23.11.2026 dazugekommen. Zwei Dinge koennen hier verrotten, ohne dass
+# jemand die Seite anfasst:
+#   a) Die handgeschriebene Summe. Steht einmal eine Zahl mehr oder weniger in
+#      der Liste, stimmt sie nicht mehr. Darum wird sie nachgerechnet und nicht
+#      nur gesucht - dieselbe Lehre wie bei den vier veralteten Zahlen im
+#      Aenderungsprotokoll.
+#   b) Die Einordnung. Diese vier Studien sind NICHT gescheitert, sie sind nie
+#      berichtet. Wer das zu "gescheitert" verkuerzt, macht aus Schweigen einen
+#      Befund - genau der Fehler, den die Seite an anderer Stelle anprangert.
+j = I.find('Ein ganzes Programm')
+if j < 0:
+    pr.append('Der Abschnitt über das unberichtete Rimonabant-Programm ist weg')
+else:
+    block = I[j:j + 6000]
+    for nct in ['NCT00325650', 'NCT00481975', 'NCT00576667', 'NCT00380302']:
+        if block.count(nct) != 1:
+            pr.append('%s steht %dx im Abschnitt (erwartet 1x)'
+                      % (nct, block.count(nct)))
+    # Die Summe nachrechnen: die Teilnehmerzahlen stehen in den <dt>-Zeilen
+    teil = [int(x) for x in re.findall(r'·\s*(\d{2,5}) Menschen</dt>', block)]
+    summe = re.search(r'Das sind ([\d  ]+) Menschen', block)
+    if len(teil) != 4:
+        pr.append('%d Teilnehmerzahlen im Abschnitt gefunden (erwartet 4): %s'
+                  % (len(teil), teil))
+    elif not summe:
+        pr.append('die Summe steht nicht mehr im Abschnitt')
+    else:
+        gesagt = int(re.sub(r'\D', '', summe.group(1)))
+        if gesagt != sum(teil):
+            pr.append('Summe stimmt nicht: Seite sagt %d, die vier Zahlen '
+                      'ergeben %d (%s)' % (gesagt, sum(teil), teil))
+    # Schweigen darf nicht zu einem Befund werden
+    for schlecht in ['vier gescheiterten', 'sind gescheitert',
+                     'es gibt keine Studie', 'wurde nie untersucht']:
+        if schlecht in block:
+            pr.append('das unberichtete Programm wird als Befund dargestellt: '
+                      '"%s"' % schlecht)
+    # Und die beiden Einschraenkungen muessen stehenbleiben
+    for muss in ['nennt das Register nicht', 'PubMed']:
+        if muss not in block:
+            pr.append('Einschränkung fehlt im Abschnitt: ' + muss)
+
 print('Verneinungen mit Beleg und Datum geprüft: %d' % len(FEST))
 print('Einzelbefunde mit Pflicht-Gegenprobe: 1 (Tourette, %d Fundstellen)'
       % len(stellen))
-print('Am 23.11.2026 nachgesehen: %d Dinge' % len(NACHGESEHEN_23_11))
-print('Abfragen geprüft: 3 | Stempel im Text: %d' % heute)
+for tag in sorted(NACHGESEHEN):
+    print('Am %s nachgesehen: %d Dinge' % (tag, len(NACHGESEHEN[tag])))
+print('Abfragen geprüft: 3 | Stempel im Text: %d (Tage: %s)'
+      % (heute, ', '.join(gefunden)))
 print('Probleme:', pr or 'keine')
 if pr:
     sys.exit(1)

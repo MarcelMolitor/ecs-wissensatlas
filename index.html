@@ -774,6 +774,99 @@ Studien-Radar 09.11.2026: PubMed (edat 01.-09.11.2026) fuer alle Stoffe aus STUD
  auf Schmerz. Ob das Absicht ist, laesst sich von aussen nicht sagen - so
  steht es auch da. KEIN Stoffprofil fuer BMS-986368: Ohne eine einzige
  Veroeffentlichung waere es halb gebaut. Test: t/dual.py.
+23.11.2026 (v250) VIER UNBERICHTETE RIMONABANT-PROGRAMME, CUSHING-KARTE.
+ Auf die Frage, ob es weitere CB1-Einsatzgebiete gibt: ja, sechs. Zwei davon
+ sind veroeffentlicht (STRADIVARIUS 18387931, Hauptzielwert VERFEHLT bei
+ p=0,22, psychische Nebenwirkungen 43,4 gegen 28,4 Prozent; Prader-Willi
+ 20965292, aus Sicherheitsgruenden vorzeitig beendet, halbe Behandlungsgruppe
+ abgebrochen). VIER sind es nicht: Praediabetes NCT00325650 (2420, Phase 3,
+ abgebrochen 03/2009), Essanfaelle NCT00481975 (289, Phase 3, ABGESCHLOSSEN
+ 08/2005), NASH NCT00576667 (165, Phase 3, Leberbiopsien, abgebrochen
+ 02/2009), Alzheimer NCT00380302 (162, Phase 1/2, ABGESCHLOSSEN 07/2007).
+ Zusammen 3036 Menschen, alle has_results=false, keine Arbeit in PubMed.
+ ZWEI DER VIER wurden nicht abgebrochen, sondern zu Ende gefuehrt. Die zwei
+ abgebrochenen endeten zeitgleich mit dem Marktruecknahme - das Register nennt
+ KEINEN Grund, und die Seite behauptet darum keinen.
+ WARUM IN DIE QUELLENKARTE und nicht ins Labor: Dort standen bisher
+ Einzelfaelle (AEF0117, Drinabant, EHP-101). Hier ist es ein ganzes Programm,
+ und es trifft eine Aussage, die diese Seite oft macht: "am Menschen
+ gescheitert" heisst zweierlei - durchgefallen, oder nie erfahren wie es
+ ausging. Nur das erste ist ein Befund.
+ CUSHING-SYNDROM als Karte n-cushing bei den Nachbarsystemen, NICHT im Labor:
+ Es gibt keine Studie, die einen CB1-Blocker GEGEN Cushing geprueft haette
+ (abgefragt 27.11.2026) - die Frage laeuft hier umgekehrt. Drei Belege:
+ 11397872 (CB1 auf den ACTH-Zellen der menschlichen Hypophyse und auf
+ Cushing-Adenomen, 42 Adenome; an vier in Kultur verstaerkt ein CB1-Aktivator
+ die CRF-getriebene ACTH-Ausschuettung, Rimonabant hebt das auf - die einzige
+ Begegnung von Rimonabant und Cushing, als Laborwerkzeug), 23884964
+ (CB1-Knockout-Maeuse nehmen unter Corticosteron nicht zu), und NCT02889224
+ VISECA (40 Menschen, vier Gruppen, Cushing vor und nach heilender Operation,
+ abgeschlossen 09/2013, kein Bericht, keine Arbeit).
+ DIESE KARTE LAESST BEWUSST EIN BELEGZEICHEN WEG und sagt das auch: 'n'
+ ("nicht untersucht") waere falsch, 'x' ("am Menschen gescheitert") auch. Fuer
+ "geprueft und nie berichtet" hat die Zeichenreihe nichts, und das
+ naechstbeste Zeichen zu nehmen hiesse, aus Schweigen einen Befund zu machen.
+ FALSCHE FREUNDE dokumentiert: "endocannabinoid Cushing" liefert fuenf
+ PubMed-Treffer, drei davon sind Namenskollisionen (Harvey-Cushing-Bibliothek
+ in Yale, Autor Bruce S. Cushing). Wie "CBC" und das komplette Blutbild.
+ TEST verneinungen.py: Regel 6 rechnet die Summe 3036 aus den vier
+ Einzelzahlen NACH, statt sie zu suchen, und verbietet, das Schweigen als
+ "gescheitert" darzustellen. Beide Waechter mit Sabotage gegengeprueft.
+ STEMPELREGEL UMGEBAUT: Sie haengte an einem einzigen Datum und haette jeden
+ neuen Stempel durchgelassen. Jetzt ein Datum pro Eintrag - und sie fand
+ sofort drei nie registrierte Stempeltage (15.11., 21.11., 22.11., elf
+ Abfragen). Die sind nachgetragen, ausdruecklich MIT VORBEHALT: aus dem
+ Seitentext beschrieben, nicht wiederholt.
+27.11.2026 (v250) GESTALTUNGSDURCHGANG - und ein selbst verursachter Schaden.
+ Eine abgegrenzte Gestaltungsschicht am Ende des Stylesheets (entfernen =
+ altes Aussehen zurueck): Schattentoken fuer beide Themes, Karten 14px mit
+ Tiefe, Kopfbereich als Flaeche mit Akzentkante in den SEITENfarben, die vier
+ Einstiegsknoepfe als Karten mit Pfeil, getoente Belegplaketten, aktiver
+ Reiter mit Flaeche. Keine Fachfarbe angefasst - eine Umfaerbung waere hier
+ kein Design, sondern ein Eingriff in die Aussage.
+ DREI PRUEFAGENTEN, und nur zusammen ergaben sie die Antwort:
+ (1) KONTRAST, 82929 Messungen ueber 28 Reiter und beide Themes. Fand EINEN
+ echten Verstoss, der AELTER war als die Schicht: .fx.part ("schwach") bei
+ 4,22 statt 4,5, weil die Plakette ihre Toenung auf eine schon getoente
+ Tabellenzeile legt - auf allen 28 Reitern sichtbar. Behoben: Vordergrund
+ 80 -> 70 Prozent --mid, gemessen 4,85.
+ Dazu zwei Fehler von mir: meine .ev-Toenung liess nur 0,05 Punkte Reserve
+ (10 -> 5 Prozent, jetzt 4,82), und ich hatte den Kartenrahmen aufgehellt,
+ weil der neue Schatten ihn tragen sollte - was nur in HELL aufgeht. Auf
+ dunklem Grund ist ein dunkler Schatten unsichtbar, dort trug allein der
+ Rahmen, und den hatte ich von 1,55 auf 1,33 geschwaecht. Aufhellung gilt
+ jetzt nur in Hell. Endstand: NULL Textverstoesse in beiden Themes.
+ (2) FINGERGERAETE, echte Emulation. Fand, dass der Wirkstaerke-Schieber im
+ Labor am Handy GAR NICHT bedienbar war: bei max-width:720px wird .lab-view
+ sticky mit z-index 5 - eine gute Idee (Messbalken bleiben beim Drehen
+ sichtbar), deren Preis ist, dass die Tafel ueber den Reglern liegt. Behoben
+ mit scroll-margin-top auf die Regler und Schieber 16 -> 36 px. Dazu sieben
+ Zielgruppen gepolstert, nach dem Muster, das die Seite fuer sup.cite a schon
+ benutzt.
+ (3) LAYOUT. Fand den schwersten Fehler des Tages, UND ZWAR MEINEN: Meine
+ Regel pointer-events:bounding-box sollte die Trefferflaechen der Zeichnungen
+ vergroessern. Agent (2) bestaetigte, dass sie das tut, Faktor 3,2. Agent (3)
+ mass etwas anderes - ob sie das RICHTIGE trifft: 21,8 Prozent der Punkte der
+ Gehirnkarte trafen eine FALSCHE Region, Tipp auf die Grosshirnrinde waehlte
+ den Thalamus. Ursache: Die Regionsgruppen enthalten ihren Beschriftungstext
+ weit rechts, ihre Umgebungsrechtecke ueberlappen sich (72 Paare), und es
+ gewinnt das zuletzt gezeichnete. Die Regel ist WIEDER ENTFERNT, auch fuer
+ die Koerperkarte (dort nur 0,7 Prozent falsch, aber ein Lernmodell, das das
+ falsche Organ oeffnet, ist schlechter als eines mit kleineren Zielen).
+ MERKEN: Eine groessere Trefferflaeche ist nichts wert, wenn sie das Falsche
+ trifft. Und: Haette ich nur einen Agenten gefragt, waere die Regel geblieben.
+ OFFEN: Sieben Organe und neun Hirnregionen bleiben am Handy unter 24 px
+ (Niere 15, Substantia nigra 11x11). Das zu loesen hiesse, die Karte auf
+ schmalen Geraeten groesser zu ZEICHNEN - eigener Durchgang. Auf dem iPad
+ besteht das Problem nicht.
+ EIGENER MESSFEHLER, dreimal am selben Tag: elementFromPoint rechnet in
+ FENSTER-, nicht in Dokumentkoordinaten. Ohne vorheriges scrollIntoView misst
+ man nichts und haelt es fuer einen Befund. Einmal haette es mich fast dazu
+ gebracht, den korrekten Befund eines Agenten als Messfehler abzutun.
+ NICHT GEMACHT: Schriften selbst ausliefern. Sie kommen weiter von Google
+ Fonts, was Tempo kostet und die IP jedes Besuchers an Google gibt. Die
+ Dateien lassen sich im Container ohne Netz nicht holen - das braucht eine
+ eigene Sitzung.
 -->
 <title>Endocannabinoid-Atlas</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -1239,12 +1332,167 @@ dl.gloss dd{margin:0;font-size:14.5px}
 .ov td.n small{display:block;font-weight:400;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
 .fx{display:inline-block;font-family:var(--f-mono);font-size:11.5px;padding:2px 7px;border-radius:6px;white-space:nowrap;border:1px solid transparent}
 .fx.on{color:color-mix(in srgb, var(--ok) 80%, var(--ink));background:color-mix(in srgb, var(--ok) 13%, transparent)}
-.fx.part{color:color-mix(in srgb, var(--mid) 80%, var(--ink));background:color-mix(in srgb, var(--mid) 14%, transparent)}
+/* 27.11.2026: 80%% -> 70%% Vordergrundanteil. Auf der getoenten Zeile der Uebersichtstabelle ergab 80%% nur 4,22:1 und verfehlte 4,5. Die Toenung bleibt, weil sie den Zustand traegt; dunkler wird die Schrift. */
+.fx.part{color:color-mix(in srgb, var(--mid) 70%, var(--ink));background:color-mix(in srgb, var(--mid) 14%, transparent)}
 .fx.off{color:color-mix(in srgb, var(--block) 85%, var(--ink));background:color-mix(in srgb, var(--block) 12%, transparent)}
 .fx.enz{color:var(--ink);border-color:var(--line);background:var(--bg)}
 .fx.none{color:var(--muted)}
 .ov-other{font-size:13px;color:var(--muted)}
 .ov-key{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);align-items:center}
+
+/* ===== Gestaltungsschicht 27.11.2026 =================================
+   Additiv und abgegrenzt: Diese Schicht entfernen heisst, das Aussehen vom
+   26.11.2026 zurueckzubekommen. Sie aendert keine Farbsemantik, keine
+   Schrift und keinen Inhalt - nur Tiefe, Einstieg, Plaketten, Tippziele. */
+
+:root{
+  --sh-1:0 1px 2px rgba(20,32,29,.05), 0 2px 8px rgba(20,32,29,.045);
+  --sh-2:0 2px 4px rgba(20,32,29,.06), 0 10px 24px rgba(20,32,29,.08);
+  --kante:linear-gradient(90deg, var(--cb1), var(--cb2) 55%, var(--endo));
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --sh-1:0 1px 2px rgba(0,0,0,.35), 0 2px 8px rgba(0,0,0,.28);
+    --sh-2:0 2px 4px rgba(0,0,0,.4), 0 10px 26px rgba(0,0,0,.42);
+  }
+}
+:root[data-theme="dark"]{
+  --sh-1:0 1px 2px rgba(0,0,0,.35), 0 2px 8px rgba(0,0,0,.28);
+  --sh-2:0 2px 4px rgba(0,0,0,.4), 0 10px 26px rgba(0,0,0,.42);
+}
+
+/* --- 1) Karten bekommen Tiefe ---------------------------------------- */
+.card{
+  border-radius:14px;
+  box-shadow:var(--sh-1);
+  transition:box-shadow .16s ease, transform .16s ease;
+}
+/* Der hellere Rahmen gilt NUR in Hell. Dort traegt der Schatten die Kante
+   mit. Auf dunklem Grund ist ein dunkler Schatten unsichtbar - dort ist
+   der Rahmen die einzige Kante und bleibt deshalb unangetastet. */
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]) .card{border-color:color-mix(in srgb, var(--line) 70%, transparent)}
+}
+:root[data-theme="light"] .card{border-color:color-mix(in srgb, var(--line) 70%, transparent)}
+@media (hover:hover){
+  .card:hover{box-shadow:var(--sh-2);transform:translateY(-1px)}
+}
+
+/* --- 2) Der Einstieg -------------------------------------------------- */
+.wrap>header{
+  position:relative;
+  background:
+    radial-gradient(60% 120% at 88% -10%, color-mix(in srgb, var(--cb1) 9%, transparent), transparent 70%),
+    var(--surface);
+  border:1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  border-radius:18px;
+  box-shadow:var(--sh-1);
+  padding:clamp(18px,3.4vw,30px) clamp(18px,3.4vw,32px) calc(clamp(18px,3.4vw,30px) + 4px);
+  overflow:hidden;
+}
+.wrap>header::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
+  background:var(--kante);
+}
+.wrap>header h1{font-size:clamp(32px,5.4vw,52px);letter-spacing:-.022em}
+.wrap>header .lead{max-width:62ch}
+
+/* Die vier Einstiegsknoepfe als Karten lesbar machen */
+.wege .xlink{
+  position:relative;
+  border-radius:14px;
+  box-shadow:var(--sh-1);
+  padding-right:34px;
+  transition:box-shadow .16s ease, transform .16s ease, border-color .16s ease;
+}
+.wege .xlink::after{
+  content:"\2192";position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  color:var(--muted);font-size:16px;transition:transform .16s ease, color .16s ease;
+}
+@media (hover:hover){
+  .wege .xlink:hover{box-shadow:var(--sh-2);transform:translateY(-1px);border-color:var(--cb1)}
+  .wege .xlink:hover::after{color:var(--cb1);transform:translate(3px,-50%)}
+}
+
+/* Die Kernaussage als ruhige Flaeche statt nackter Linie */
+.notice{
+  border-radius:0 14px 14px 0;
+  background:color-mix(in srgb, var(--cb1) 5%, var(--surface));
+  box-shadow:var(--sh-1);
+}
+
+/* --- 3) Plaketten und aktiver Reiter --------------------------------- */
+/* 5%% statt 10%%: 10%% liess der schlechtesten Plakette in Hell nur 0,05 Punkte Reserve ueber der Schwelle. */
+.ev{background:color-mix(in srgb, var(--c) 5%, transparent)}
+.tab[aria-selected="true"]{
+  background:color-mix(in srgb, var(--cb1) 8%, transparent);
+  border-radius:8px 8px 0 0;
+}
+.chip{box-shadow:var(--sh-1)}
+.chip .dot{box-shadow:0 0 0 2px color-mix(in srgb, var(--c) 22%, transparent)}
+@media (hover:hover){
+  .chip:hover{box-shadow:var(--sh-2)}
+}
+
+/* --- 4) Tippziele auf Fingergeraeten --------------------------------- */
+/* Die anklickbaren Gruppen der Zeichnungen waren 15 px hoch. Die Zeichnung
+   bleibt unveraendert; nur die Trefferflaeche waechst. */
+@media (pointer:coarse){
+  /* HIER STAND pointer-events:bounding-box fuer .organ und .region.
+     Am 27.11.2026 eingefuegt und am selben Tag wieder entfernt: Die Regel
+     vergroesserte die Trefferflaechen zwar nachweislich (Faktor 3,2), traf
+     damit aber bei 21,8 Prozent der Punkte der Gehirnkarte die FALSCHE
+     Region - die Regionsgruppen enthalten ihre Beschriftung, ihre
+     Umgebungsrechtecke ueberlappen sich dadurch, und es gewinnt das zuletzt
+     gezeichnete statt der sichtbaren Form. Ein Tipp auf die Grosshirnrinde
+     waehlte den Thalamus. Groessere Ziele sind nichts wert, wenn sie das
+     Falsche treffen. Nicht ohne Rastermessung wieder einfuegen. */
+  .qchip{padding:7px 12px}
+  .st-btn.sm{padding:8px 12px}
+  .link-btn{padding:6px 2px}
+}
+
+/* --- 4b) Fingerbedienung: Nacharbeit nach Messung 27.11.2026 ---------
+   Alle Werte stammen aus einer Messung mit echter Geraeteemulation, nicht
+   aus dem Augenmass. Die Seite benutzt fuer Textziele bereits das Muster
+   "Polster plus negativer Aussenabstand"; das wird hier fortgefuehrt, damit
+   der Zeilenfall sich nicht aendert. */
+@media (pointer:coarse){
+  /* Der Wirkstaerke-Schieber war mit 16 px das kleinste echte Bedienelement
+     der Seite. */
+  #labStr{height:36px;padding:10px 0;background:transparent}
+  #labStr::-webkit-slider-thumb{width:26px;height:26px}
+  #labStr::-moz-range-thumb{width:26px;height:26px}
+
+  /* Kein Bedienelement darf unter der angehefteten Messtafel parken.
+     44 px Kopfleiste + rund 150 px Tafel + Luft. */
+  .lab-controls .lab-ctl, .lab-controls [id]{scroll-margin-top:210px}
+
+  /* Ankerknoepfe waren 23,4 px breit - 0,6 px zu wenig. */
+  .anchor{padding-left:11px;padding-right:9px}
+  /* Linklisten sind keine Saetze, die WCAG-Ausnahme gilt dort nicht. */
+  .st-links a{padding:7px 2px;margin:-7px 0}
+  footer a{display:inline-block;padding:6px 2px;margin:-6px 0}
+  /* Steht ein Knopf allein in einer Tabellenzelle, ist er kein Satzglied. */
+  td>.term:only-child, td>.xlink:only-child{display:inline-block;padding:6px 2px;margin:-6px 0}
+  /* Unterzeilen von Karten und Beschreibungslisten. */
+  p.sub .xlink, span.sub .term, dt .term{padding:6px 1px;margin:-6px 0}
+  /* Die Kaestchen der Studienfilter samt Beschriftung. */
+  label:has(>input[type=checkbox]){display:inline-flex;align-items:center;min-height:32px;gap:8px}
+  label>input[type=checkbox]{width:20px;height:20px}
+}
+
+/* --- 5) Ruhe bewahren ------------------------------------------------- */
+@media (prefers-reduced-motion: reduce){
+  .card, .wege .xlink, .wege .xlink::after, .chip{transition:none!important}
+  .card:hover, .wege .xlink:hover{transform:none!important}
+}
+/* Im Druck keine Schatten - sie werden zu grauem Matsch. */
+@media print{
+  .card,.wege .xlink,.notice,.wrap>header,.chip{box-shadow:none!important}
+  .wrap>header::after{display:none}
+}
+/* ===== Ende Gestaltungsschicht 27.11.2026 ============================= */
 </style>
 
 <div class="wrap">
@@ -2599,6 +2847,10 @@ const KEY = [
  ['34844288',2021,'Sinopoulou u. a.','Cochrane Database Syst Rev','Übersicht zu Bauchschmerz bei Morbus Crohn und chronisch-entzündlicher Darmerkrankung, 14 Studien mit 743 Teilnehmenden. Darin die Olorinab-Studie: 14 Menschen, zwei Dosisstufen gegeneinander, keine Placebogruppe. Risikoverhältnis für eine 30-prozentige Schmerzlinderung 0,66 (95 Prozent 0,38 bis 1,15) - die Aussagekraft wird als sehr unsicher eingestuft. Unter den Arzneimitteln der Übersicht verursachte Olorinab die meisten unerwünschten Ereignisse, mehr in der höheren Dosisgruppe.','Medizin','Übersicht','10.1002/14651858.CD013531.pub2'],
  ['28214870',2017,'Haruna u. a.','Pharmacology','S-777469, ein CB2-Aktivator von Shionogi, an Mäusen: Es dämpfte die Ohrschwellung nach Reizstoffgabe und milderte milbenausgelöste neurodermitisähnliche Hautveränderungen; Oberhautdicke, Mastzellen und eingewanderte eosinophile Zellen gingen zurück. Die Arbeit stammt aus dem Forschungslabor der Herstellerfirma. Tierbefund - die beiden Studien am Menschen sind nie berichtet worden.','Entzündung','Tierstudie','10.1159/000455916'],
  ['34117788',2021,'Müller-Vahl u. a.','Mov Disord','Die größere Prüfung des MAGL-Hemmers Lu AG06466 (früher ABX-1431) am Menschen: 49 Erwachsene mit Tourette-Syndrom, zwölf Wochen, zwei Dosisstufen, placebokontrolliert und doppelblind an mehreren Zentren. Beide Behandlungsgruppen besserten sich auf der Tic-Skala, der Unterschied in Woche 8 betrug jedoch 3,0 Punkte (95 Prozent 0,1 bis 5,9; p = 0,043) zugunsten von Placebo. Kein weiterer Zielwert zeigte einen Unterschied. Verträglich. Fazit der Autoren: kein Hinweis auf eine tic-unterdrückende Wirkung. Damit ist der positive Einzeldosis-Befund derselben Arbeitsgruppe nicht bestätigt.','Medizin','RCT','10.1002/mds.28681'],
+ ['18387931',2008,'Nissen u. a.','JAMA','Die groesste Pruefung des CB1-Blockers Rimonabant an einem harten Gefaessbefund: 839 Menschen mit Bauchfettleibigkeit und krankhaft veraenderten Herzkranzgefaessen, 112 Zentren, 18 Monate, doppelblind gegen Placebo. Der Hauptzielwert - die Zunahme des Plaquevolumens im Ultraschall von innen - wurde verfehlt (+0,25 gegen +0,51 Prozent; p = 0,22). Ein Nebenzielwert, das Gesamtvolumen, fiel guenstig aus (p = 0,03). Gewicht, Taillenumfang, HDL-Cholesterin, Triglyzeride, Entzuendungswert und Langzeitblutzucker besserten sich deutlich. Psychische Nebenwirkungen traten bei 43,4 gegenueber 28,4 Prozent auf (p < 0,001).','Medizin','RCT','10.1001/jama.299.13.1547'],
+ ['20965292',2011,'Motaghedi u. a.','Eur J Med Genet','Der Versuch, den CB1-Blocker Rimonabant gegen den unstillbaren Hunger beim Prader-Willi-Syndrom einzusetzen: eine doppelblinde, placebokontrollierte Pilotstudie an Erwachsenen. Sie wurde aus Sicherheitsgruenden vorzeitig beendet - die Haelfte der Behandlungsgruppe brach wegen psychischer Nebenwirkungen ab. Unter den zehn Teilnehmenden zeigte sich ein Trend zu Gewichtsabnahme, geringerer Fettmasse und hoeherem IGF1. Ein Wirksamkeitsbeleg ist das nicht; die Arbeit ist vor allem ein Beispiel dafuer, wie fruehe eine solche Pruefung an der Vertraeglichkeit endet.','Medizin','RCT','10.1016/j.ejmg.2010.09.015'],
+ ['11397872',2001,'Pagotto u. a.','J Clin Endocrinol Metab','Der erste Nachweis, dass Cannabinoide an der menschlichen Hirnanhangsdruese direkt mitregeln. CB1 fand sich in der normalen Druese auf den ACTH-bildenden Zellen und in 42 untersuchten Hypophysenadenomen vor allem bei den hormonell aktiven - darunter die Adenome, die ein Cushing-Syndrom verursachen; in hormonell stummen Adenomen kaum oder nicht. Alle Tumorproben enthielten mehr Anandamid und 2-AG als normales Gewebe, und der Gehalt ging mit dem CB1-Nachweis zusammen. An vier Cushing-Adenomen in Zellkultur aenderte ein CB1-Aktivator die ACTH-Ausschuettung allein nicht; gab man ihn zusammen mit dem Stresssignal CRF, verstaerkten sich beide, und ein CB1-Blocker hob diese Verstaerkung auf.','Grundlagen','Zellversuch','10.1210/jcem.86.6.7565'],
+ ['23884964',2013,'Scerif u. a.','J Endocrinol','Ein Mausmodell des Cushing-Syndroms, das die Rolle von CB1 beim dauerhaften Cortisol-Ueberschuss pruefte. Wildtyp-Maeuse mit Corticosteron-Depot nahmen zu und zeigten eine erhoehte Aktivitaet des Energiesensors AMPK im Hypothalamus und in der Leber. Maeuse ohne CB1-Rezeptor zeigten beides nicht: keine Gewichtszunahme und keinen Anstieg der AMPK-Aktivitaet. Im Fettgewebe trat die Veraenderung dagegen in beiden Gruppen auf, war also nicht von CB1 abhaengig, und am Herzmuskel fiel sie bei den Knockout-Tieren umgekehrt aus. Fazit der Autoren: Fuer die vollen Stoffwechselfolgen eines chronischen Glukokortikoid-Ueberschusses braucht es einen intakten Cannabinoid-Weg.','Grundlagen','Tierstudie','10.1530/JOE-13-0192'],
  ['7556170',1995,'Galiègue u. a.','Eur J Biochem','Die erste mengenmäßige Übersicht beider Rezeptoren in menschlichem Gewebe. CB1 überwiegt im Zentralnervensystem und kommt daneben in Nebenniere, Herz, Lunge, Prostata, Gebärmutter, Eierstock, Hoden, Knochenmark, Thymus und Mandeln vor. CB2 fehlt im Gehirn und ist im Immungewebe 10- bis 100-mal häufiger als CB1.','Wirkmechanismus','Mensch','10.1111/j.1432-1033.1995.tb20780.x'],
  ['12505702',2002,'Schuel u. a.','Chem Phys Lipids','Anandamid, PEA und OEA sind in menschlicher Samenflüssigkeit, Eileiterflüssigkeit, Follikelflüssigkeit, Fruchtwasser und Muttermilch messbar. Die Gebärmutter rund um die Einnistung enthält die höchste Anandamid-Menge, die je in einem Säugetiergewebe gefunden wurde.','Wirkmechanismus','Mensch','10.1016/s0009-3084(02)00158-5'],
  ['27568210',2016,'Almada u. a.','Reproduction','An menschlichen Gebärmutterschleimhaut-Zellen hemmte Anandamid über CB1 die Umwandlung, die für eine Einnistung nötig ist.','Wirkmechanismus','Zellversuch','10.1530/REP-16-0364'],
@@ -2844,6 +3096,11 @@ const URL_PUB = 'https://endocannabinoidsystem-ecs.netlify.app/';
 const selfCite = () => `${AUTOR}: Endocannabinoid-Atlas. Stand ${STAND}. ${URL_PUB} (abgerufen am ${new Date().toLocaleDateString('de-DE', {day:'numeric', month:'long', year:'numeric'})}).`;
 /* Was sich zuletzt geändert hat. Korrekturen zuerst – sie sind die ehrlichere Information. */
 const NEU = [
+  ['Korrektur','<b>Eine Plakette war zu blass zum Lesen – auf jedem Reiter.</b> Die Angabe „schwach“ in der Übersichtstabelle legte ihre eigene Tönung auf eine Tabellenzeile, die bereits getönt war. Zwei Tönungen übereinander, und der Text stand bei einem Kontrast von 4,22 – unter dem, was als lesbar gilt. Der Fehler war älter als dieser Durchgang und stand auf allen 28 Reitern, weil die Tabelle überall mitläuft. Gefunden wurde er erst, als jedes Textelement der Seite gegen seinen tatsächlichen Hintergrund gemessen wurde statt gegen den vermuteten.'],
+  ['Korrektur','<b>Der Wirkstärke-Schieber im Wirkstoff-Labor war auf dem Handy nicht bedienbar.</b> Nicht schwer bedienbar – gar nicht. Die Messwerttafel bleibt dort beim Scrollen oben stehen, damit man die Balken ausschlagen sieht, während man unten dreht; genau dadurch lag sie über dem Schieber. Mit Tastatur ging es, mit dem Finger nicht. Der Schieber ist jetzt mehr als doppelt so hoch, und kein Regler parkt mehr unter der Tafel.'],
+  ['Neu','<b>Vier Rimonabant-Programme mit zusammen 3036 Menschen, von denen niemand ein Ergebnis kennt.</b> Der Wirkstoff gilt auf dieser Seite als Lehrfall des Scheiterns. Geprüft wurde er aber in sechs weiteren Einsatzgebieten, und nur zwei davon sind veröffentlicht. Zu den anderen vier – Vorstufe des Diabetes mit 2420 Teilnehmenden, Essanfälle, Fettleber mit Leberbiopsien, Alzheimer – gibt es weder einen Ergebnisbericht noch eine Arbeit. Zwei davon wurden nicht abgebrochen, sondern regulär zu Ende geführt, eine davon vor über zwanzig Jahren. Steht unter <i>Welchen Quellen man trauen kann</i>, weil es zeigt, dass „am Menschen gescheitert“ zweierlei heißen kann: durchgefallen, oder nie erfahren, wie es ausging. Nur das erste ist ein Befund.'],
+  ['Neu','<b>Das Cushing-Syndrom – als Nachbarsystem, nicht als Einsatzgebiet.</b> Dass der Körper dauerhaft zu viel Cortisol ausschüttet, ist das natürliche Gegenstück zum Stresstest: kein Reiz von Minuten, sondern ein Überschuss von Jahren, der sich operieren lässt. CB1 sitzt auf genau den Zellen der Hirnanhangsdrüse, die das antreibende Hormon herstellen. Die menschliche Antwort darauf hat eine Uniklinik 2013 gemessen, an vierzig Menschen, vor und nach der heilenden Operation – und nie berichtet. Die Karte lässt deshalb bewusst ein Belegzeichen weg und erklärt, warum keines davon passt.'],
+  ['Neu','<b>Die Seite hat ein Aussehen bekommen, kein neues Gesicht.</b> Karten und Kopfbereich haben jetzt Tiefe statt nur einer Linie, der Einstieg trägt eine Akzentkante in den Farben der Seite selbst, und die Belegstufen sind als Plaketten lesbar. Unangetastet blieb, was Bedeutung trägt: Die Farben der Stoffe und der Belegstufen sind exakt dieselben wie vorher. Eine Umfärbung wäre hier kein Geschmack gewesen, sondern ein Eingriff in die Aussage.'],
   ['Korrektur','<b>Eine Aussage im Wirkstoff-Labor war überholt – und damit falsch.</b> Dort stand, ein Wirkstoff, der FAAH und MAGL zugleich hemmt, sei „am Menschen nie geprüft worden“. Das Studienregister sagt etwas anderes: BMS-986368 läuft seit Juni 2025 in drei Phase-2-Studien mit zusammen über 360 Teilnehmenden an 139 Orten. Veröffentlicht ist davon nichts – aber „keine veröffentlichten Ergebnisse“ heißt nicht „nicht geprüft“, und genau diese Unterscheidung stand hier auf dem Kopf.'],
   ['Neu','<b>Wirkstoff-Labor:</b> Der Weg „nur außerhalb des Gehirns“ nannte bisher einen echten Verwandten. Er hat zwei – und ihr Unterschied ist das Lehrreichste daran: Monlunabant ist ein kleines Molekül, das das Gehirn meiden <i>soll</i> und trotzdem teilweise hineinkommt; Nimacimab ist ein Antikörper und einfach zu <i>groß</i> dafür. Dieselbe Absicht, entgegengesetzte Lösung – fein justiert und durchlässig gegen grob und dicht.'],
   ['Neu','<b>Nimacimab hat jetzt eine eigene Stoffkarte</b> – der Antikörper gegen CB1, zu groß fürs Gehirn. Und die wichtigste Angabe darauf ist, wie dünn die Belege sind: Es gibt keine Arbeit mit eigenen Ergebnissen zu diesem Stoff, erwähnt wird er genau einmal. Alles Weitere steht im Studienregister. Die laufende Studie schließt außerdem alle Menschen aus, bei denen sich das Psyche-Problem der CB1-Blocker zeigen würde – sie kann es also nicht widerlegen.'],
@@ -4070,6 +4327,17 @@ KNOW.splice(KNOW.findIndex(k => k.id === 'anwendung') + 1, 0,
  </dl>
  <h3 class="sub" style="margin:14px 0 0">Was in keiner Datenbank steht</h3>
  <p>PubMed verzeichnet, was veröffentlicht wurde. Was in der Schublade blieb, fehlt – und dieses Feld liefert dafür reichlich Beispiele, die auf dieser Seite stehen: Bei <button type="button" class="xlink" data-sub="aef">AEF0117</button> sind zwei abgeschlossene Phase-2b-Studien mit 333 und 228 Teilnehmenden ohne veröffentlichtes Wirksamkeitsergebnis geblieben. Zu Drinabant, einer abgebrochenen Studie mit 873 Teilnehmenden, und zu zwei ausgesetzten Phase-2a-Studien von EHP-101 findet sich in PubMed nichts – nur im Studienregister.</p>
+ <h3 class="sub" style="margin:14px 0 0">Ein ganzes Programm, von dem vier Fünftel schweigen</h3>
+ <p>Die Beispiele oben sind einzelne Studien. Es geht auch im Großen. Rimonabant, der CB1-Blocker, ist auf dieser Seite der Lehrfall des Scheiterns – zugelassen, wegen psychischer Nebenwirkungen zurückgezogen. Geprüft wurde er aber nicht nur gegen Übergewicht. Sucht man im Studienregister nach allem, wofür er am Menschen untersucht wurde, findet man <b>sechs weitere Einsatzgebiete</b> – und von diesen sechs sind nur zwei veröffentlicht.</p>
+ <p><b>Die zwei, die man nachlesen kann, lohnen den Blick</b>, weil sie in verschiedene Richtungen zeigen. ${cite('Bei 839 Menschen mit Bauchfettleibigkeit und veränderten Herzkranzgefäßen – 112 Zentren, 18 Monate – <b>verfehlte</b> der Hauptzielwert, die Zunahme der Gefäßablagerungen, das Ziel (p = 0,22), während ein Nebenzielwert günstig ausfiel (p = 0,03) und Gewicht, Taille und Blutfette sich deutlich besserten. Im selben Bericht: psychische Nebenwirkungen bei 43,4 gegenüber 28,4 Prozent unter Placebo (p &lt; 0,001). [[18387931]]')} ${ev('g')} ${cite('Beim Prader-Willi-Syndrom, einer seltenen Erkrankung mit unstillbarem Hunger, wurde die Pilotstudie <b>aus Sicherheitsgründen vorzeitig beendet</b>: Die Hälfte der Behandlungsgruppe brach wegen psychischer Nebenwirkungen ab, bei zehn Teilnehmenden insgesamt. [[20965292]]')} ${ev('s')}</p>
+ <p><b>Die anderen vier gibt es nur als Registereintrag.</b> In keinem der vier ist ein Ergebnisbericht hinterlegt, und zu keinem findet die Suche in PubMed eine Arbeit (abgefragt am 23.11.2026):</p>
+ <dl class="kv">
+  <dt>Vorstufe des Diabetes · 2420 Menschen</dt><dd>Phase 3 über 30 Monate, Hauptzielwert war die Zeit bis zum Übergang in einen Typ-2-Diabetes. Begonnen im Mai 2006, abgebrochen im März 2009 (NCT00325650). Das ist die größte Studie dieser Liste – und die Frage, die sie stellte, ist bis heute offen.</dd>
+  <dt>Essanfälle bei Adipositas · 289 Menschen</dt><dd>Phase 3 über sechs Monate. <b>Nicht abgebrochen, sondern im August 2005 regulär abgeschlossen</b> (NCT00481975). Die Teilnehmenden sind also vollständig durch die Studie gegangen; berichtet wurde seit mehr als zwanzig Jahren nichts.</dd>
+  <dt>Fettleberentzündung · 165 Menschen</dt><dd>Phase 3 in 24 Ländern, geplant über 24 Monate. Der Hauptzielwert war feingeweblich – es wurden <b>Leberbiopsien</b> entnommen. Begonnen im Januar 2008, abgebrochen im Februar 2009 (NCT00576667).</dd>
+  <dt>Alzheimer-Krankheit · 162 Menschen</dt><dd>Phase 1/2 über zwölf Wochen mit einem zweiten CB1-Blocker derselben Firma, in zwei Dosisstufen gegen Placebo. <b>Im Juli 2007 regulär abgeschlossen</b> (NCT00380302). In PubMed findet man zu diesem Wirkstoff nur Arbeiten an Tieren und an Zellen.</dd>
+ </dl>
+ <p class="sum"><b>Das sind 3036 Menschen, über deren Ergebnis niemand etwas weiß</b> – und zwei dieser vier Studien wurden nicht abgebrochen, sondern zu Ende geführt. Bei den zwei abgebrochenen fällt das Ende in die Monate, in denen das Mittel in Europa vom Markt genommen wurde; einen Abbruchgrund nennt das Register nicht, und diese Seite behauptet darum keinen. Zweierlei folgt daraus für das Lesen dieser Seite. Erstens hat „am Menschen gescheitert“ hier zwei ganz verschiedene Bedeutungen: geprüft und durchgefallen, oder geprüft und nie erfahren, wie es ausging. Nur die erste ist ein Befund. Zweitens zeigt es, wie wenig eine Suche verrät, die bei PubMed endet – nach ihr sähe es aus, als habe man diesen Wirkstoff nur gegen Übergewicht und Gefäßablagerungen erprobt.</p>
  <p><b>Das verzerrt in eine Richtung.</b> Veröffentlicht wird eher, was ein Ergebnis hat. Eine Seite, die nur aus Veröffentlichungen gebaut ist, zeigt das Feld also <i>günstiger</i>, als es ist – ausgerechnet eine Seite, deren Bilanz ohnehin schon nüchtern ausfällt. Deshalb gehört zu jedem Wirkstoff ein Blick ins Register, <i>bevor</i> jemand schreibt „dazu gibt es nichts“.</p>
  <h3 class="sub" style="margin:14px 0 0">Und was eine KI betrifft</h3>
  <p>Diese Seite entsteht mit Hilfe einer KI. Deren Ausgaben sind <b>keine Quelle</b> – weder die hier verwendete noch die irgendeines anderen Systems. Sie können eine Studie finden, zusammenfassen und einordnen, und sie können dabei falsch liegen, ohne es zu merken: eine Zahl verdrehen, eine Arbeit erfinden, die es nicht gibt, oder behaupten, es gebe keine Daten, wo welche sind.</p>
@@ -4243,7 +4511,7 @@ KNOW.splice(KNOW.findIndex(k => k.id === 'anwendung') + 1, 0,
  </dl>
  <p class="sub">Weiter: <button type="button" class="xlink" data-tab="bilanz">Was man daraus lernen kann</button> · <button type="button" class="xlink" data-tab="einfluss">Einflussfaktoren</button> · <button type="button" class="xlink" data-tab="gene">Gene &amp; Varianten</button></p></article>`},
  {id:'nachbarn', t:'Nachbarsysteme', html:() => `<p class="intro">Das Endocannabinoid-System arbeitet nicht allein, sondern regelt andere Systeme mit. Am besten untersucht sind die Verbindungen zu Oxytocin und Vasopressin, den beiden Hormonen aus dem Hypothalamus, zu TNF, dem Alarmstoff des Immunsystems, und zu GABA und Glutamat, den beiden Hauptbotenstoffen des Gehirns. Die Stärke der Belege ist dabei sehr unterschiedlich – sie steht an jeder Karte.</p>
- <div class="st-row jumps" aria-label="Zu einem Nachbarsystem springen">${[['n-oxytocin','Oxytocin'],['n-vasopressin','Vasopressin'],['n-hormone','Sexualhormone'],['n-tnf','TNF'],['n-glp1','GLP-1'],['n-leptin','Leptin & Orexin'],['n-appetit','Ghrelin & Appetithormone'],['n-opioid','Opioide'],['n-zucker','Zuckerstoffwechsel'],['n-mikrobiom','Darmbakterien'],['n-stress','Stressachse'],['n-weitere','Weitere Systeme'],['n-nicht','Was hier nicht steht']].map(([id, t]) => `<button type="button" class="qchip" data-jump="${id}">${t}</button>`).join('')}</div>
+ <div class="st-row jumps" aria-label="Zu einem Nachbarsystem springen">${[['n-oxytocin','Oxytocin'],['n-vasopressin','Vasopressin'],['n-hormone','Sexualhormone'],['n-tnf','TNF'],['n-glp1','GLP-1'],['n-leptin','Leptin & Orexin'],['n-appetit','Ghrelin & Appetithormone'],['n-opioid','Opioide'],['n-zucker','Zuckerstoffwechsel'],['n-mikrobiom','Darmbakterien'],['n-stress','Stressachse'],['n-cushing','Cushing-Syndrom'],['n-weitere','Weitere Systeme'],['n-nicht','Was hier nicht steht']].map(([id, t]) => `<button type="button" class="qchip" data-jump="${id}">${t}</button>`).join('')}</div>
  <article class="card" id="n-oxytocin" style="border-color:var(--cb1)"><h3>Oxytocin und Anandamid</h3><span class="sub">Die Belohnung sozialer Nähe</span>
  <p>Oxytocin wird bei Berührung, Vertrauen, Geburt und Stillen ausgeschüttet und gilt als Bindungshormon. Ein Teil seiner Wirkung läuft offenbar über das Endocannabinoid-System.</p>
  <p>${cite('In einer vielbeachteten Mausstudie zeigte sich: Sozialer Kontakt erhöht Anandamid im Nucleus accumbens, dem Belohnungszentrum, Isolation senkt es. Oxytocin ist der Auslöser dieser Freisetzung. Blockiert man die Oxytocin-Rezeptoren, bleibt der Anstieg aus. Blockiert man CB1, verliert sozialer Kontakt seine belohnende Wirkung. Bremst man zusätzlich den Abbau von Anandamid, gleicht das den fehlenden Oxytocin-Effekt wieder aus. [[26504214]]')}</p>
@@ -4355,6 +4623,18 @@ KNOW.splice(KNOW.findIndex(k => k.id === 'anwendung') + 1, 0,
  <h3 class="sub" style="margin:14px 0 0">3. Vergleichen: Was ist bei PTBS anders?</h3>
  <p>${cite('20 Erwachsene, mit und ohne posttraumatische Belastungsstörung, machten in zufälliger Reihenfolge Sport und den Stresstest. Anandamid stieg in beiden Gruppen. 2-AG stieg nur bei den Gesunden – bei den Menschen mit PTBS blieb dieser Anstieg nach beiden Belastungen aus. [[30978371]]')} ${ev('s')} Die Autoren werten das als ersten Hinweis, dass das System bei PTBS auf Belastung zu schwach anspringt. Mit 20 Teilnehmenden ist das genau das: ein Hinweis.</p>
  <p class="sum">Zusammengenommen: Dass Stress dieses System anspricht, ist am Menschen gemessen, wenn auch nicht in jeder Studie gleich. Dass mehr Anandamid die Stressreaktion dämpft, zeigt ein kontrollierter Versuch an Gesunden. Daraus ein Behandlungsmittel zu machen, ist bisher nicht gelungen. Wie das im Gehirn verschaltet ist, steht im Reiter <button type="button" class="xlink" data-tab="gehirn">Im Gehirn</button>.</p></article>
+ <article class="card" id="n-cushing" style="border-color:var(--block)"><h3>Der Dauerüberschuss</h3><span class="sub">Das Cushing-Syndrom stellt die Frage von der anderen Seite – und die Antwort am Menschen liegt ungelesen im Register</span>
+ <p>Die Karte darüber zeigt, was dieses System tut, wenn Cortisol <i>kurz</i> ansteigt. Daneben gibt es den umgekehrten Fall, und niemand hat ihn entworfen: Beim <b>Cushing-Syndrom</b> schüttet der Körper dauerhaft zu viel Cortisol aus – meist wegen eines gutartigen Tumors der Hirnanhangsdrüse oder der Nebenniere. Die Folgen sind Bauchfett, Muskelabbau, Knochenschwund und oft ein Diabetes. Es ist damit das natürliche Gegenstück zum Stresstest: kein Reiz von Minuten, sondern ein Überschuss von Jahren, der sich durch eine Operation auch wieder abstellen lässt. Was dieses System dabei tut, ist an drei Stellen untersucht – und an der wichtigsten nicht berichtet.</p>
+ <h3 class="sub" style="margin:14px 0 0">Am menschlichen Gewebe: der Rezeptor sitzt mitten in der Kette</h3>
+ <p>${cite('CB1 findet sich in der normalen Hirnanhangsdrüse auf genau den Zellen, die ACTH herstellen – also auf dem Glied der Stressachse, das die Nebenniere antreibt. In 42 untersuchten Adenomen der Drüse war CB1 vor allem bei den hormonell aktiven nachweisbar, darunter die Adenome, die ein Cushing-Syndrom auslösen; in hormonell stummen kaum oder nicht. Alle Tumorproben enthielten mehr Anandamid und 2-AG als normales Gewebe. [[11397872]]')} ${ev('m')}</p>
+ <p>${cite('Dieselbe Arbeit prüfte an vier Cushing-Adenomen in Zellkultur, ob das auch etwas tut. Ein CB1-Aktivator allein änderte die ACTH-Ausschüttung nicht. Gab man ihn <i>zusammen</i> mit dem Stresssignal CRF, verstärkten sich beide gegenseitig – und ein CB1-Blocker hob genau diese Verstärkung wieder auf. [[11397872]]')} ${ev('s')} Vier Gewebeproben in der Schale sind wenig, und der Blocker in diesem Versuch war <button type="button" class="xlink" data-sub="rim">Rimonabant</button>. Das ist, soweit diese Seite sieht, die <b>einzige</b> Stelle, an der Rimonabant und das Cushing-Syndrom sich begegnen: als Werkzeug im Labor, nicht als Behandlung.</p>
+ <h3 class="sub" style="margin:14px 0 0">An der Maus: ohne CB1 bleibt die Gewichtszunahme aus</h3>
+ <p>${cite('Mäuse bekamen ein Corticosteron-Depot eingesetzt, was einen dauerhaften Cortisol-Überschuss nachstellt. Die normalen Tiere nahmen zu, und der Energiesensor AMPK wurde im Hypothalamus und in der Leber aktiver. Tiere ohne CB1-Rezeptor zeigten beides nicht. Im Fettgewebe trat die Veränderung dagegen in beiden Gruppen auf, hing dort also nicht an CB1. Fazit der Autoren: Für die vollen Stoffwechselfolgen eines chronischen Glukokortikoid-Überschusses braucht es einen intakten Cannabinoid-Weg. [[23884964]]')} ${ev('h')} Ein Knockout-Versuch ist ein sauberer Kausalnachweis – in der Maus. Was daraus für den Menschen folgt, ist genau die Frage, die als nächstes gestellt wurde.</p>
+ <h3 class="sub" style="margin:14px 0 0">Am Menschen: gemessen, abgeschlossen, nicht berichtet</h3>
+ <p>Die Uniklinik Bordeaux hat genau diese Frage untersucht, und zwar gründlich: <b>40 Menschen in vier Gruppen</b> – Menschen mit Cushing-Syndrom, übergewichtige Vergleichspersonen, normalgewichtige Vergleichspersonen und Menschen mit Nebennierenschwäche, die Hydrocortison einnehmen. Die Cushing-Gruppe wurde <i>vor und nach</i> der heilenden Operation gemessen, der Überschuss also an denselben Personen an- und wieder abgeschaltet. Hauptzielwert war der Tagesverlauf von 2-AG im Verhältnis zum Cortisol. Die Studie wurde im <b>September 2013 abgeschlossen</b> (NCT02889224). Im Register ist kein Ergebnisbericht hinterlegt, und in PubMed findet die Suche keine Arbeit dazu (abgefragt am 27.11.2026).</p>
+ <p><b>Diese Karte lässt hier bewusst ein Belegzeichen weg</b>, und das ist kein Versehen. „Nicht untersucht“ wäre falsch – es wurde untersucht, an vierzig Menschen, mit einem Studienaufbau, um den man diese Arbeit beneiden kann. „Am Menschen gescheitert“ wäre genauso falsch – niemand weiß, wie es ausging. Für diesen Fall hat die Zeichenreihe dieser Seite nichts, und das nächstbeste Zeichen zu nehmen hieße, aus Schweigen einen Befund zu machen. Mehr dazu unter <button type="button" class="xlink" data-tab="bilanz" data-card="b-quellen">Welchen Quellen man trauen kann</button>, wo noch vier solche Fälle stehen.</p>
+ <p class="sub">Eine Warnung zur Suche, falls jemand nachsieht: Die PubMed-Abfrage „endocannabinoid Cushing“ liefert fünf Treffer, und <b>drei davon gehören nicht zum Thema</b> – zwei, weil eine beteiligte Autorin an der <i>Harvey-Cushing</i>-Bibliothek in Yale arbeitet, einer, weil ein Autor <i>Bruce S. Cushing</i> heißt. Dieselbe Art Falle wie „CBC“, das in Studienregistern meist das komplette Blutbild meint.</p>
+ <p class="sum">Für die Bilanz zählt vor allem, was hier <i>nicht</i> steht: Es gibt keine Studie, die einen CB1-Blocker <i>gegen</i> das Cushing-Syndrom geprüft hätte (abgefragt am 27.11.2026). Das Syndrom ist deshalb kein Einsatzgebiet, auch kein gedachtes, und steht nicht im <button type="button" class="xlink" data-tab="labor">Wirkstoff-Labor</button>. Die Frage läuft hier umgekehrt: Bei jedem Einsatzgebiet lautet sie „hilft ein Blocker gegen die Krankheit?“, hier lautet sie „verändert die Krankheit das System?“. Das ist der Grund, warum diese Karte bei den Nachbarsystemen steht und nicht beim Wirkstoff – und der Grund, warum die Antwort darauf seit zwölf Jahren in einer Schublade liegt, ist ein anderer.</p></article>
  <h3 class="sec" id="n-weitere">Berührungspunkte, zu denen es weniger gibt</h3>
  <p class="intro">Diese Systeme bekommen hier bewusst nur wenige Zeilen, und das ist die Aussage: Zu den Karten oben gibt es Versuche mit Gegenproben, hier gibt es Hinweise. Die Länge eines Eintrags auf dieser Seite soll ungefähr zur Menge der Belege passen.</p>
  <div class="cards">${[
