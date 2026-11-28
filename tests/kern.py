@@ -33,12 +33,25 @@ MUSS = ['PPAR-α', 'sitzen in einer Membran', 'welche Proteine die Zelle baut',
         'welche Gene abgelesen werden', 'unerwartete Rolle für einen Kernrezeptor',
         'Bauanleitung für PPAR-α', 'zwei verschiedenen Entzündungsmodellen',
         'vollständig wirkungslos', 'CBG', 'saubere Gegenbeweis',
-        'hat niemand gemessen', 'gemischt bis ernüchternd',
+        # 28.11.2026: Hier stand 'hat niemand gemessen'. Der Test hielt damit
+        # eine Formulierung fest, die inhaltlich FALSCH war: Laut PubMed hat
+        # PEA am lebenden Menschen randomisiert und doppelblind die erhoehte
+        # Durchlaessigkeit des Darms verringert (31054246), und die
+        # PPAR-alpha-Abhaengigkeit ist in einer MENSCHLICHEN Zelllinie
+        # gezeigt, nicht in Maeusen. Geprueft wird jetzt die richtige
+        # Aussage - und die alte steht unten in VERBOTEN.
+        'einen halben Schritt weit geprüft',
+        'eine Wirkung, nicht der Weg',
+        'sondern aus menschlichen Zellen',
+        'gemischt bis ernüchternd',
         'Ein geklärter Mechanismus ist keine Behandlung']
 VERBOTEN = ['sieben Andockstellen', 'Alles andere in diesem Reiter steckt in der Zellhülle',
             'Beides steht in der Literatur', 'Millisekunden', 'innerhalb von Stunden',
             'wirkt beim Menschen', 'hilft bei', 'sollte man einnehmen', 'empfehlenswert',
-            'gut belegt', 'Beweis für die Wirksamkeit']
+            'gut belegt', 'Beweis für die Wirksamkeit',
+            # Die alte, zu strenge Verneinung darf nicht zurueckkommen.
+            'hat niemand gemessen',
+            'in Mäusen geklärt, nicht in Menschen']
 
 
 async def zum_reiter(pg):
@@ -74,7 +87,12 @@ async def main():
         for weg in VERBOTEN:
             if weg in t:
                 probleme.append('Formulierung, die die Belege nicht tragen: %s' % weg)
-        for stufe in ['teils belegt', 'schwach belegt', 'nicht untersucht']:
+        # 'nicht untersucht' stand hier bis zum 28.11.2026 mit. Diese Stufe
+        # ist aus der Karte verschwunden, weil sich die TATSACHE geaendert
+        # hat: Was als 'nicht untersucht' gefuehrt war, ist untersucht -
+        # nur nicht dort, wo die Behauptung galt. Die Stufe zu verlangen
+        # hiesse, eine Aussage zu verlangen, die nicht mehr stimmt.
+        for stufe in ['teils belegt', 'schwach belegt']:
             if stufe not in t:
                 probleme.append('Belegstufe fehlt: %s' % stufe)
         if re.search(r'\d+\s*(mg|g|Kapsel)\b', t):

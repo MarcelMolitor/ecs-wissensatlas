@@ -141,6 +141,20 @@ NACHGESEHEN = {
          'der Laboreintrag traegt bewusst das Datum der tatsaechlichen '
          'Nachschau vom 23.11., nicht das Datum seines Einbaus am 27.11.', 2),
     ],
+    '28.11.2026': [
+        # EIN Stempel im Text deckt beide Abfragen, deshalb hier auch ein
+        # Eintrag: Die Regel vergleicht Fundstellen mit Eintraegen, und
+        # zwei Eintraege auf einen Stempel waeren eine Buchung zu viel.
+        'ME/CFS, zwei Abfragen unter einem Stempel. PubMed ("chronic fatigue '
+        'syndrome endocannabinoid"): 5 Treffer, zwei davon wirklich auf ME/CFS '
+        'zusammen mit diesem System verschlagwortet (24977967 Mangel-These, '
+        '33361830 Strahlenschaeden), drei Fehltreffer der Suchlogik. Register '
+        '(ME/CFS bzw. chronic fatigue syndrome x Cannabinoide oder PEA): 2 '
+        'Eintraege - NCT05311852 (PEA mit Luteolin bei Long Covid, randomisiert, '
+        'abgeschlossen) und ein Fehltreffer (Nasenspuelung bei Golfkriegs-'
+        'Syndrom). Also nicht null - aber keiner MISST etwas an Menschen mit '
+        'ME/CFS, und genau darum bleibt die Schlussfolgerung stehen',
+    ],
     '27.11.2026': [
         'NCT02889224 (VISECA, Endocannabinoide beim Cushing-Syndrom, '
         'Bordeaux): abgeschlossen 09/2013, has_results = false, keine Arbeit '
@@ -197,18 +211,25 @@ def _soll(liste):
     return sum(e[1] if isinstance(e, tuple) else 1 for e in liste)
 
 
-gefunden = sorted(set(re.findall(r'abgefragt am (\d{1,2}\.\d{1,2}\.20\d\d)', I)))
+# Gross-/Kleinschreibung: Ein Stempel am Satzanfang ("(Abgefragt am
+# 28.11.2026.)") ist derselbe Stempel wie einer mitten im Satz. Ohne
+# IGNORECASE zaehlte diese Regel ihn nicht und meldete "0 im Text".
+gefunden = sorted(set(re.findall(r'abgefragt am (\d{1,2}\.\d{1,2}\.20\d\d)',
+                                 I, re.I)))
 for tag in gefunden:
     if tag not in NACHGESEHEN:
         pr.append('Stempel vom %s im Text, aber kein Eintrag in NACHGESEHEN – '
                   'was wurde an dem Tag nachgesehen?' % tag)
 for tag, liste in NACHGESEHEN.items():
-    n = I.count('abgefragt am ' + tag)
+    # Wie oben: ein Stempel am Satzanfang ("(Abgefragt am ...") ist
+    # derselbe Stempel. I.count() unterscheidet Gross- und
+    # Kleinschreibung, deshalb hier kleingeschrieben zaehlen.
+    n = I.lower().count(('abgefragt am ' + tag).lower())
     if n != _soll(liste):
         pr.append('Stempel vom %s: %d im Text, aber %d Fundstellen als '
                   'nachgesehen eingetragen – wurde wirklich nachgesehen?'
                   % (tag, n, _soll(liste)))
-heute = sum(I.count('abgefragt am ' + t) for t in NACHGESEHEN)
+heute = sum(I.lower().count(('abgefragt am ' + t).lower()) for t in NACHGESEHEN)
 
 # --- 3b) Die zwei Programme, die geprueft und nie berichtet wurden --------
 # Diese Klasse ist das Gegenstueck zur Verneinung: Nicht "niemand hat
@@ -286,12 +307,44 @@ VERSAGT = [
     # gesenkt, auch gegenüber dem Vergleichspräparat.
     ('[[28610718]]', 'Echinacea', 1200, 900,
      ['keine Studie am Menschen', 'gibt keine Studie', 'nie am Menschen geprüft']),
+    # 27.11.2026: Hier stand "28 Jahre nach der Zellmessung [...] keine Studie,
+    # die den Anspruch am Menschen geprueft haette. Nicht eine." Es gibt eine
+    # (39025264, randomisiert, oxidativer Schaden an der Haut gemessen). Die
+    # Stelle war die zugespitzteste Verneinung der ganzen Seite.
+    ('[[39025264]]', 'Antioxidans-Anspruch', 1400, 1100,
+     ['Nicht eine, die ihn widerlegt', 'keine Studie, die den Anspruch',
+      'hat niemand geprüft']),
+    # 27.11.2026: Hier stand "Dass PEA oder OEA beim Menschen ueber PPAR-alpha
+    # wirken, hat niemand gemessen" mit der Stufe "nicht untersucht". Gemessen
+    # ist am Menschen eine Wirkung (31054246); nur der Weg nicht.
+    ('[[31054246]]', 'PPAR-α', 1300, 1000,
+     ['hat niemand gemessen', 'in Mäusen geklärt, nicht in Menschen']),
+    # 28.11.2026: Hier stand, von den FAAH-Pruefungen am Menschen habe "keine
+    # einzige" ihren Hauptzielwert erreicht - waehrend die Seite zwei Klicks
+    # weiter dieselbe Studie "das beste Ergebnis, das dieser Weg hat" nennt.
+    # Laut PubMed hat sie alle drei Hauptzielwerte erreicht. Der erste Fall, in
+    # dem die Seite nicht die Literatur falsch darstellte, sondern sich selbst.
+    ('sie braucht eine Ausnahme', 'FAAH-Bilanz', 900, 1700,
+     ['hat <b>keine einzige</b> ihren Hauptzielwert',
+      'keine einzige ihren Hauptzielwert erreicht']),
+    # 28.11.2026: Hier stand "ergibt keinen einzigen Treffer" und "keine
+    # einzige Studie eingetragen". Beides als Suchergebnis falsch; die
+    # Schlussfolgerung stimmte trotzdem.
+    ('Bis zum 28.11.2026 stand hier als Begründung', 'ME/CFS', 400, 2400,
+     ['ergibt keinen einzigen Treffer', 'ist keine einzige Studie eingetragen']),
 ]
 for beleg, wer, vor_, nach_, boese in VERSAGT:
-    i = I.find(beleg)
-    if i < 0:
+    n = I.count(beleg)
+    if n == 0:
         pr.append('%s: der Beleg %s ist nicht mehr genannt' % (wer, beleg))
         continue
+    if n > 1:
+        # Nicht stillschweigend die erste Fundstelle nehmen: dann prueft die
+        # Regel eine Stelle, die niemand gemeint hat.
+        pr.append('%s: der Anker "%s" kommt %dx vor – das Fenster liegt dann '
+                  'irgendwo. Anker eindeutig machen.' % (wer, beleg, n))
+        continue
+    i = I.find(beleg)
     umfeld = I[max(0, i - vor_):i + nach_]
     for schlecht in boese:
         if schlecht in umfeld:
@@ -305,16 +358,75 @@ for beleg, wer, vor_, nach_, boese in VERSAGT:
 # Anker ist die ZITATSTELLE [[...]], nicht die bloße Nummer: die steht auch
 # in der Quellenliste, und dort steht der Kartentext naturgemäß nicht. Beim
 # ersten Versuch meldete die Regel vier Fehler, die es nicht gab.
-i = I.find('[[28610718]]')
-if i >= 0:
-    umfeld = I[max(0, i - 1500):i + 1500]
-    for muss, warum in [
-            ('nicht der Weg', 'der Unterschied zwischen Nutzen und Weg'),
-            ('nicht der Rezeptor', 'der Hinweis, dass Haut gemessen wurde'),
-            ('Herstellerfirma', 'der Interessenkonflikt der Autoren'),
-            ('21092239', 'der Zellversuch, in dem der Effekt nicht über CB2 lief')]:
-        if muss not in umfeld:
-            pr.append('Echinacea: %s fehlt' % warum)
+# --- Kernpruefungen: was eine Korrektur nicht verlieren darf ---------------
+#
+# WARUM ES DIESE FUNKTION GIBT: Die Pruefungen standen vorher als
+#     i = I.find(<anker>)
+#     if i >= 0: ...
+# da - und damit hing jede Pruefung an genau dem Satz, den sie pruefen soll.
+# Beim Sabotieren blieb die ME/CFS-Regel stumm, weil ich den Anker selbst
+# entfernt hatte: kein Anker, kein Fenster, keine Pruefung. Eine Regel, die
+# sich durch Entfernen ihres Ankers abschalten laesst, ist keine Regel.
+# Jetzt ist ein fehlender Anker selbst ein Problem - und ein mehrfacher auch,
+# denn dann liegt das Fenster irgendwo.
+def kern(anker, wer, vor_, nach_, muss, flach=False):
+    n = I.count(anker)
+    if n == 0:
+        pr.append('%s: die Stelle ist weg – Anker "%s" nicht gefunden'
+                  % (wer, anker[:50]))
+        return
+    if n > 1:
+        pr.append('%s: der Anker "%s" kommt %dx vor – Fenster beliebig'
+                  % (wer, anker[:50], n))
+        return
+    i = I.find(anker)
+    u = I[max(0, i - vor_):i + nach_]
+    if flach:
+        u = u.replace('<b>', '').replace('</b>', '').replace('<i>', '').replace('</i>', '')
+    for muster, warum in muss:
+        if muster not in u:
+            pr.append('%s: %s fehlt' % (wer, warum))
+
+# Die Antioxidans-Stelle darf ihr Argument nicht verlieren: Geprueft ist die
+# HAUT, nicht das Geschluckte. Faellt dieser Halbsatz weg, liest die Stelle
+# wie ein Beleg fuer den Satz auf der Flasche - das waere schlimmer als die
+# alte zu strenge Verneinung.
+# Die FAAH-Bilanz muss die Ausnahme weiter nennen UND einordnen - sonst wird
+# aus der Korrektur ein Erfolgsversprechen.
+kern('sie braucht eine Ausnahme', 'FAAH-Bilanz', 400, 2000, [
+    ('nur Männer', 'dass nur Männer geprüft wurden'),
+    ('unveröffentlicht', 'dass die größere Wiederholung unveröffentlicht ist'),
+    ('schärfer', 'die Einordnung, dass das Muster dadurch härter wird'),
+    ('[[30528676]]', 'der Beleg der Ausnahme')])
+
+# Und die ME/CFS-Stelle muss die Maus als Maus benennen.
+kern('Bis zum 28.11.2026 stand hier als Begründung', 'ME/CFS', 400, 2600, [
+    ('Mausmodell des Golfkriegs-Syndroms', 'dass es ein Mausmodell ist'),
+    ('kein Grund, sie für den Menschen zu glauben', 'die Grenze zum Menschen'),
+    ('nicht die Aussage, sondern ihr Beleg', 'die Offenlegung des Fehlertyps'),
+    ('[[39241906]]', 'der Beleg des Tierbefunds')])
+
+kern('[[39025264]]', 'Antioxidans-Anspruch', 1600, 1600, [
+    ('nicht das Geschluckte', 'der Hinweis, dass die Haut geprüft wurde'),
+    ('weiter ungeprüft', 'dass der Anspruch für das Produkt offen bleibt'),
+    ('Vorstudie', 'dass es eine Vorstudie ist')], flach=True)
+
+# Und die PPAR-alpha-Stelle muss weiter Wirkung von Weg trennen.
+# Nicht 'menschlichen Zelllinie': die Seite schreibt 'Darmzelllinie'. Geprueft
+# wird deshalb die Aussage selbst - dass die Mechanismusarbeit aus menschlichen
+# Zellen stammt und nicht aus Maeusen. Das war der dritte Teil der alten,
+# falschen Behauptung.
+kern('[[31054246]]', 'PPAR-α', 1200, 1200, [
+    ('eine Wirkung, nicht der Weg', 'die Trennung von Wirkung und Weg'),
+    ('sondern aus menschlichen Zellen',
+     'dass der Weg in menschlichen Zellen gezeigt ist, nicht in Mäusen')],
+     flach=True)
+
+kern('[[28610718]]', 'Echinacea', 1500, 1500, [
+    ('nicht der Weg', 'der Unterschied zwischen Nutzen und Weg'),
+    ('nicht der Rezeptor', 'der Hinweis, dass Haut gemessen wurde'),
+    ('Herstellerfirma', 'der Interessenkonflikt der Autoren'),
+    ('21092239', 'der Zellversuch, in dem der Effekt nicht über CB2 lief')])
 
 # --- 5) Ein Einzelbefund darf nicht ohne seine Gegenprobe stehen ---------
 # Am 23.11.2026 stand auf der Seite: eine Einzeldosis senkte Tics, und die
